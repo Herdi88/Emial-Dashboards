@@ -40,10 +40,10 @@ function login() {
         document.getElementById('dashboard').style.display = 'block';
         alert('Login successful!');
     } else {
-        alert('Invalid credentials. Please try again.');
+        alert('Invalid credentials. Please try again or use the forgot password link.');
     }
 }
+
 function forgotPassword() {
     alert('If this were a real app, you would get an email to reset your password!');
 }
-
