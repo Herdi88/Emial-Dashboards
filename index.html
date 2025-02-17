@@ -9,41 +9,15 @@
 <body>
     <div id="loginPanel">
         <h2>Login</h2>
-        <p>Please enter your username and password to log in.</p>
         <input type="text" id="username" placeholder="Enter Username">
         <input type="password" id="password" placeholder="Enter Password">
         <button onclick="login()">Login</button>
-        <p class="login-help">
-            <a href="#" onclick="forgotPassword()">Forgot Password?</a>
-        </p>
     </div>
 
     <div id="dashboard" style="display: none;">
         <h1>Email Dashboard</h1>
-        <div id="callCenter">
-            <h2>Call Center Panel</h2>
-            <input type="text" id="messageInput" placeholder="Enter your message">
-            <select id="inquiryReason">
-                <option value="">Select Reason...</option>
-                <option value="appointment">Appointment</option>
-                <option value="billing">Billing Inquiry</option>
-                <option value="generalInfo">General Information</option>
-            </select>
-            <select id="doctorSelect">
-                <option value="">Select Doctor...</option>
-                <option value="drSmith">Dr. Smith</option>
-                <option value="drJones">Dr. Jones</option>
-            </select>
-            <button id="sendMessageButton" onclick="sendMessage()">Send Message</button>
-        </div>
-        <div id="clinicStaff">
-            <h2>Clinic Staff Panel</h2>
-            <div id="clinicMessages"></div>
-        </div>
-        <div id="teamLeader">
-            <h2>Team Leader Panel</h2>
-            <div id="leaderMessages"></div>
-        </div>
+        <div id="userInfo"></div>
+        <div id="messages"></div>
     </div>
 
     <script src="script.js"></script>
