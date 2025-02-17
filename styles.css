@@ -13,7 +13,7 @@ body {
     border-radius: 8px;
     border: 1px solid #ccc;
     width: 300px;
-    margin: 50px auto;
+    margin: auto;
 }
 
 input[type="text"], input[type="password"], select, button {
@@ -37,34 +37,11 @@ button:hover {
     opacity: 0.8;
 }
 
-
-button:hover {
-    background-color: #0056b3;
+.login-help a {
+    color: #007bff;
+    text-decoration: none;
 }
 
-.tooltip {
-    position: relative;
-    display: inline-block;
-}
-
-.tooltip .tooltiptext {
-    visibility: hidden;
-    width: 180px;
-    background-color: black;
-    color: white;
-    text-align: center;
-    border-radius: 6px;
-    padding: 5px 0;
-    position: absolute;
-    z-index: 1;
-    bottom: 100%;
-    left: 50%;
-    margin-left: -90px;
-    opacity: 0;
-    transition: opacity 0.3s;
-}
-
-.tooltip:hover .tooltiptext {
-    visibility: visible;
-    opacity: 1;
+.login-help a:hover {
+    text-decoration: underline;
 }
