@@ -43,3 +43,7 @@ function login() {
         alert('Invalid credentials. Please try again.');
     }
 }
+function forgotPassword() {
+    alert('If this were a real app, you would get an email to reset your password!');
+}
+
