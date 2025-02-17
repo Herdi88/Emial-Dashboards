@@ -2,8 +2,6 @@ document.addEventListener('DOMContentLoaded', function() {
     var sendMessageButton = document.getElementById('sendMessageButton');
     if (sendMessageButton) {
         sendMessageButton.addEventListener('click', sendMessage);
-    } else {
-        console.error('Send Message button not found.');
     }
 });
 
@@ -31,4 +29,17 @@ function displayMessage(panelId, message) {
     var messageDiv = document.createElement('div');
     messageDiv.textContent = message;
     panel.appendChild(messageDiv);
+}
+
+function login() {
+    var username = document.getElementById('username').value;
+    var password = document.getElementById('password').value;
+    
+    if (username === "admin" && password === "admin") {
+        document.getElementById('loginPanel').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+        alert('Login successful!');
+    } else {
+        alert('Invalid credentials. Please try again.');
+    }
 }
