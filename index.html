@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Dashboard</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to CSS file -->
+</head>
+<body>
+    <div id="dashboard">
+        <h1>Email Dashboard</h1>
+        <section id="callCenter">
+            <h2>Call Center Panel</h2>
+            <input type="text" id="messageInput" placeholder="Enter your message">
+            <button onclick="sendMessage()">Send Message</button>
+        </section>
+        <section id="clinicStaff">
+            <h2>Clinic Staff Panel</h2>
+            <div id="messages"></div>
+        </section>
+        <section id="teamLeader">
+            <h2>Team Leader Panel</h2>
+            <div id="allMessages"></div>
+        </section>
+    </div>
+    <script src="script.js"></script> <!-- Link to JavaScript file -->
+</body>
+</html>
