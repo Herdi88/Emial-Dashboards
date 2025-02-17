@@ -22,6 +22,10 @@ function sendMessage() {
 
 function displayMessage(panelId, message) {
     var panel = document.getElementById(panelId);
+    if (!panel) {
+        console.error('Panel not found: ', panelId);
+        return;
+    }
     var messageDiv = document.createElement('div');
     messageDiv.textContent = message;
     panel.appendChild(messageDiv);
