@@ -1,60 +1,66 @@
-/* General body styling */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #fafafa;
-    color: #333;
-    line-height: 1.6;
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
     margin: 0;
     padding: 20px;
+    color: #333;
 }
 
-/* Dashboard container */
-#dashboard {
-    width: 90%;
-    margin: 20px auto;
-    padding: 20px;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.05);
-}
-
-/* Panel styling */
-#callCenter, #clinicStaff, #teamLeader {
-    background: #e3f2fd;
+#dashboard, #loginPanel {
+    background-color: #ffffff;
     padding: 15px;
     margin-top: 20px;
-    border-radius: 5px;
-    border: 1px solid #90caf9;
+    border-radius: 8px;
+    border: 1px solid #ccc;
 }
 
-/* Heading styles */
-h1 {
-    color: #0d47a1;
-    text-align: center;
+h1, h2 {
+    color: #007bff;
 }
 
-h2 {
-    color: #1976d2;
-}
-
-/* Form elements styling */
-input[type="text"], select, button {
+input[type="text"], input[type="password"], select, button {
     width: 100%;
     padding: 10px;
     margin-top: 5px;
-    border: 1px solid #90caf9;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
     border-radius: 4px;
 }
 
 button {
-    background-color: #2196f3;
+    background-color: #007bff;
     color: white;
     border: none;
-    font-size: 16px;
     cursor: pointer;
-    transition: background-color 0.3s;
 }
 
 button:hover {
-    background-color: #0d47a1;
+    background-color: #0056b3;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 180px;
+    background-color: black;
+    color: white;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -90px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
 }
