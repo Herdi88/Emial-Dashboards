@@ -1,6 +1,6 @@
 function sendMessage() {
     var message = document.getElementById('messageInput').value;
-    if (message) {
+    if (message.trim() !== '') {
         displayMessageInClinic(message);
         displayMessageInLeader(message);
         document.getElementById('messageInput').value = ''; // Clear input after sending
@@ -10,15 +10,16 @@ function sendMessage() {
 }
 
 function displayMessageInClinic(message) {
-    var messagesDiv = document.getElementById('messages');
-    var messageElement = document.createElement('div');
-    messageElement.textContent = "New message: " + message;
+    var messagesDiv = document.getElementById('clinicMessages'); // Ensure this ID exists in your HTML
+    var messageElement = document.createElement('p');
+    messageElement.textContent = message;
     messagesDiv.appendChild(messageElement);
 }
 
 function displayMessageInLeader(message) {
-    var messagesDiv = document.getElementById('allMessages');
-    var messageElement = document.createElement('div');
-    messageElement.textContent = "Logged message: " + message;
+    var messagesDiv = document.getElementById('leaderMessages'); // Ensure this ID exists in your HTML
+    var messageElement = document.createElement('p');
+    messageElement.textContent = message;
     messagesDiv.appendChild(messageElement);
 }
+
