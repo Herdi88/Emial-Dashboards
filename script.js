@@ -1,3 +1,10 @@
+// Simulated user database for demonstration
+const users = {
+    "Hardi": { password: "hardiPass123", floor: "3rd Floor", doctor: "Dr. Smith" },
+    "Alice": { password: "alicePass123", floor: "2nd Floor", doctor: "Dr. Jones" },
+    "Bob": { password: "bobPass123", floor: "1st Floor", doctor: "Dr. Brown" },
+};
+
 document.addEventListener('DOMContentLoaded', function() {
     var sendMessageButton = document.getElementById('sendMessageButton');
     if (sendMessageButton) {
@@ -5,45 +12,27 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-function sendMessage() {
-    var message = document.getElementById('messageInput').value.trim();
-    var inquiryReason = document.getElementById('inquiryReason').value;
-    var doctor = document.getElementById('doctorSelect').value;
-
-    if (!message) {
-        alert('Please enter a message.');
-        return;
-    }
-
-    var fullMessage = `Message: ${message}\nReason: ${inquiryReason}\nDoctor: ${doctor}`;
-    displayMessage('clinicMessages', fullMessage);
-    displayMessage('leaderMessages', fullMessage);
-
-    document.getElementById('messageInput').value = '';
-    document.getElementById('inquiryReason').selectedIndex = 0;
-    document.getElementById('doctorSelect').selectedIndex = 0;
-}
-
-function displayMessage(panelId, message) {
-    var panel = document.getElementById(panelId);
-    var messageDiv = document.createElement('div');
-    messageDiv.textContent = message;
-    panel.appendChild(messageDiv);
-}
-
 function login() {
     var username = document.getElementById('username').value;
     var password = document.getElementById('password').value;
     
-    if (username === "admin" && password === "admin") {
+    if (users[username] && users[username].password === password) {
         document.getElementById('loginPanel').style.display = 'none';
         document.getElementById('dashboard').style.display = 'block';
-        alert('Login successful!');
+        alert(username + ' from ' + users[username].floor + ' logged in successfully!');
+        displayUserSpecificInfo(username);
     } else {
-        alert('Invalid credentials. Please try again or use the forgot password link.');
+        alert('Invalid credentials. Please try again.');
     }
 }
 
-function forgotPassword() {
-    alert('If this were a real app, you would get an email to reset your password!');
+function displayUserSpecificInfo(username) {
+    // Display information relevant to the user's floor or doctor
+    var userInfoDiv = document.getElementById('userInfo');
+    userInfoDiv.innerHTML = `<p>You are logged in as ${username}, assigned to ${users[username].doctor} on ${users[username].floor}.</p>`;
+}
+
+function sendMessage() {
+    // Add logic here to handle sending a message based on the form inputs
+    alert('Message sent');
 }
