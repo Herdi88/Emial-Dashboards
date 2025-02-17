@@ -1,25 +1,17 @@
 function sendMessage() {
     var message = document.getElementById('messageInput').value;
     if (message.trim() !== '') {
-        displayMessageInClinic(message);
-        displayMessageInLeader(message);
+        displayMessage('clinicStaff', message);
+        displayMessage('teamLeader', message);
         document.getElementById('messageInput').value = ''; // Clear input after sending
     } else {
         alert('Please enter a message.');
     }
 }
 
-function displayMessageInClinic(message) {
-    var messagesDiv = document.getElementById('clinicMessages'); // Ensure this ID exists in your HTML
-    var messageElement = document.createElement('p');
-    messageElement.textContent = message;
-    messagesDiv.appendChild(messageElement);
+function displayMessage(panelId, message) {
+    var panel = document.getElementById(panelId);
+    var messageDiv = document.createElement('div');
+    messageDiv.textContent = message;
+    panel.appendChild(messageDiv);
 }
-
-function displayMessageInLeader(message) {
-    var messagesDiv = document.getElementById('leaderMessages'); // Ensure this ID exists in your HTML
-    var messageElement = document.createElement('p');
-    messageElement.textContent = message;
-    messagesDiv.appendChild(messageElement);
-}
-
