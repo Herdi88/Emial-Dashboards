@@ -15,27 +15,30 @@
     </div>
 
     <div id="dashboard" style="display: none;">
-        <h1>Email Dashboard</h1>
         <div id="callCenter">
             <h2>Call Center Panel</h2>
-            <input type="text" id="messageInput" placeholder="Enter your message">
+            <input type="text" id="callerName" placeholder="Caller Name">
+            <input type="text" id="contactInfo" placeholder="Contact Info">
+            <input type="text" id="mrn" placeholder="MRN">
             <select id="inquiryReason">
                 <option value="">Select Reason...</option>
                 <option value="appointment">Appointment</option>
-                <option value="billing">Billing Inquiry</option>
-                <option value="generalInfo">General Information</option>
+                <option value="billing">Billing</option>
+                <option value="general">General Inquiry</option>
             </select>
             <select id="doctorSelect">
                 <option value="">Select Doctor...</option>
                 <option value="drSmith">Dr. Smith</option>
                 <option value="drJones">Dr. Jones</option>
             </select>
-            <button onclick="sendMessage()">Send Message</button>
+            <button onclick="sendCallCenterMessage()">Send Message</button>
         </div>
+
         <div id="clinicStaff">
             <h2>Clinic Staff Panel</h2>
             <div id="clinicMessages"></div>
         </div>
+
         <div id="teamLeader">
             <h2>Team Leader Panel</h2>
             <div id="leaderMessages"></div>
@@ -45,3 +48,4 @@
     <script src="script.js"></script>
 </body>
 </html>
+
