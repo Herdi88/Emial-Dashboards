@@ -1,54 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Email Dashboard</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <div id="loginPanel">
-        <h2>Login</h2>
-        <input type="text" id="username" placeholder="Enter Username">
-        <input type="password" id="password" placeholder="Enter Password">
-        <button onclick="login()">Login</button>
-    </div>
+const users = {
+    "Hardi": { password: "hardiPass123", floor: "3rd Floor", doctor: "Dr. Smith", clinicStaff: "Alice" },
+    "Alice": { password: "alicePass123", floor: "2nd Floor", doctor: "Dr. Jones", clinicStaff: "Bob" },
+    "Bob": { password: "bobPass123", floor: "1st Floor", doctor: "Dr. Brown", clinicStaff: "Charlie" },
+};
 
-    <div id="dashboard" style="display: none;">
-        <h1>Email Dashboard</h1>
-        <div id="userInfo">
-            <h2>User Info</h2>
-            <p id="userDetails"></p>
-        </div>
-        <div id="callCenter">
-            <h2>Call Center Panel</h2>
-            <input type="text" id="callerName" placeholder="Caller Name">
-            <input type="text" id="contactInfo" placeholder="Contact Info">
-            <input type="text" id="mrn" placeholder="MRN">
-            <select id="inquiryReason">
-                <option value="">Select Reason...</option>
-                <option value="appointment">Appointment</option>
-                <option value="billing">Billing Inquiry</option>
-                <option value="generalInfo">General Information</option>
-            </select>
-            <select id="doctorSelect" onchange="selectStaffBasedOnDoctor()">
-                <option value="">Select Doctor...</option>
-                <option value="Dr. Smith">Dr. Smith</option>
-                <option value="Dr. Jones">Dr. Jones</option>
-                <option value="Dr. Brown">Dr. Brown</option>
-            </select>
-            <button onclick="sendCallCenterMessage()">Send Message</button>
-        </div>
-        <div id="clinicStaff">
-            <h2>Clinic Staff Panel</h2>
-            <div id="clinicMessages"></div>
-        </div>
-        <div id="teamLeader">
-            <h2>Team Leader Panel</h2>
-            <div id="leaderMessages"></div>
-        </div>
-    </div>
+function login() {
+    var username = document.getElementById('username').value;
+    var password = document.getElementById('password').value;
+    if (users[username] && users[username].password === password) {
+        document.getElementById('loginPanel').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+        document.getElementById('userDetails').innerText = `Logged in as ${username}, assigned to ${users[username].doctor} on ${users[username].floor}.`;
+    } else {
+        alert('Invalid credentials. Please try again.');
+    }
+}
 
-    <script src="script.js"></script>
-</body>
-</html>
+function selectStaffBasedOnDoctor() {
+    var selectedDoctor = document.getElementById('doctorSelect').value;
+    var staffName = Object.keys(users).find(key => users[key].doctor === selectedDoctor);
+    alert('Messages will be handled by ' + users[staffName].clinicStaff);
+}
+
+function sendCallCenterMessage() {
+    var message = document.getElementById('callerName').value + ' - ' +
+                  document.getElementById('contactInfo').value + ' - ' +
+                  document.getElementById('mrn').value + ' - ' +
+                  document.getElementById('inquiryReason').value + ' - ' +
+                  document.getElementById('doctorSelect').value;
+    displayMessage('clinicMessages', message);
+    displayMessage('leaderMessages', message);
+}
+
+function displayMessage(panelId, message) {
+    var panel = document.getElementById(panelId);
+    var messageDiv = document.createElement('div');
+    messageDiv.textContent = message;
+    panel.appendChild(messageDiv);
+}
