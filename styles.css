@@ -6,22 +6,23 @@ body {
     color: #333;
 }
 
-#dashboard, #loginPanel {
+#loginPanel, #callCenter, #clinicStaff, #teamLeader {
     background-color: #ffffff;
     padding: 15px;
     margin-top: 20px;
     border-radius: 8px;
     border: 1px solid #ccc;
-    width: 300px;
-    margin: auto;
 }
 
-input[type="text"], input[type="password"], button {
+h1, h2 {
+    color: #007bff;
+}
+
+input[type="text"], select, button {
     width: 100%;
-    padding: 8px;
-    margin-top: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    padding: 10px;
+    margin-top: 5px;
+    box-sizing: border-box;
 }
 
 button {
@@ -29,10 +30,8 @@ button {
     color: white;
     border: none;
     cursor: pointer;
-    font-size: 16px;
 }
 
 button:hover {
     background-color: #0056b3;
-    opacity: 0.8;
 }
