@@ -31,6 +31,16 @@ button {
     cursor: pointer;
     font-size: 16px;
 }
+#messages {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #eef;
+    border: 1px solid #ccd;
+}
+
+button {
+    margin-top: 10px;
+}
 
 button:hover {
     background-color: #0056b3;
