@@ -3,45 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Email Dashboard</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Clinic Dashboard</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="loginSection">
-        <h1>Login</h1>
-        <input type="text" id="username" placeholder="Enter Username">
-        <input type="password" id="password" placeholder="Enter Password">
+    <div id="loginPanel">
+        <h2>Login</h2>
+        <input type="text" id="username" placeholder="Username">
+        <input type="password" id="password" placeholder="Password">
         <button onclick="login()">Login</button>
     </div>
+
     <div id="dashboard" style="display: none;">
-        <h1>Email Dashboard</h1>
-        <div id="userInfo">
-            <p id="userDetails"></p>
-        </div>
-        <div id="callCenter">
-            <h2>Call Center Panel</h2>
+        <h2>Dashboard</h2>
+        <p id="userDetails"></p>
+
+        <div id="callCenterPanel">
+            <h3>Call Center</h3>
             <input type="text" id="callerName" placeholder="Caller Name">
             <input type="text" id="contactInfo" placeholder="Contact Info">
-            <input type="text" id="MRN" placeholder="MRN">
-            <select id="reasonSelect">
-                <option value="">Select Reason...</option>
-                <!-- Options will be populated here -->
-            </select>
+            <input type="text" id="mrn" placeholder="MRN">
+            <input type="text" id="inquiryReason" placeholder="Inquiry Reason">
             <select id="doctorSelect">
-                <option value="">Select Doctor...</option>
-                <!-- Options will be populated here -->
+                <option value="Dr. Smith">Dr. Smith</option>
+                <option value="Dr. Jones">Dr. Jones</option>
+                <option value="Dr. Brown">Dr. Brown</option>
             </select>
-            <button onclick="sendMessage()">Send Message</button>
+            <button onclick="sendCallCenterMessage()">Send Message</button>
+            <button onclick="selectStaffBasedOnDoctor()">Find Staff</button>
         </div>
-        <div id="clinicStaff">
-            <h2>Clinic Staff Panel</h2>
-            <!-- Messages will be displayed here -->
-        </div>
-        <div id="teamLeader">
-            <h2>Team Leader Panel</h2>
-            <!-- Messages will be displayed here -->
+
+        <div id="messagePanels">
+            <div id="clinicMessages">
+                <h3>Clinic Messages</h3>
+            </div>
+            <div id="leaderMessages">
+                <h3>Leader Messages</h3>
+            </div>
         </div>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
