@@ -1,48 +1,55 @@
-const users = {
-    "Hardi": { password: "hardiPass123", floor: "3rd Floor", doctor: "Dr. Smith", clinicStaff: "Alice" },
-    "Alice": { password: "alicePass123", floor: "2nd Floor", doctor: "Dr. Jones", clinicStaff: "Bob" },
-    "Bob": { password: "bobPass123", floor: "1st Floor", doctor: "Dr. Brown", clinicStaff: "Charlie" },
-};
+document.addEventListener('DOMContentLoaded', function() {
+    var loginButton = document.getElementById('loginButton');
+    loginButton.addEventListener('click', login);
+});
 
 function login() {
     var username = document.getElementById('username').value;
-    var password = document.getElementById('password').value;
-    if (users[username] && users[username].password === password) {
+    var user = users[username];
+    if (user && user.password === document.getElementById('password').value) {
         document.getElementById('loginPanel').style.display = 'none';
         document.getElementById('dashboard').style.display = 'block';
-        document.getElementById('userDetails').innerText = `Logged in as ${username}, assigned to ${users[username].doctor} on ${users[username].floor}. Clinic staff responsible: ${users[username].clinicStaff}.`;
+        setupUserDashboard(user);
     } else {
         alert('Invalid credentials. Please try again.');
     }
 }
 
-function sendCallCenterMessage() {
-    var message = document.getElementById('callerName').value + ' - ' +
-                  document.getElementById('contactInfo').value + ' - ' +
-                  document.getElementById('mrn').value + ' - ' +
-                  document.getElementById('inquiryReason').value + ' - ' +
-                  document.getElementById('doctorSelect').value;
-    if (!message.replace(/\s+-\s+/g, '').trim()) {
-        alert('Please fill out all fields.');
-        return;
+function setupUserDashboard(user) {
+    if (user.role === 'clinicStaff') {
+        document.getElementById('callCenterPanel').style.display = 'none';
+        document.getElementById('clinicResponsePanel').style.display = 'block';
+        populateResponseOptions();
+    } else {
+        document.getElementById('callCenterPanel').style.display = 'block';
+        document.getElementById('clinicResponsePanel').style.display = 'none';
     }
-    // Simulate different message formatting for different panels
-    displayMessage('clinicMessages', 'Clinic: ' + message);
-    displayMessage('leaderMessages', 'Leader: ' + message);
+    document.getElementById('userDetails').textContent = `Logged in as ${user.name}, assigned to ${user.doctor} on ${user.floor}.`;
 }
 
-function displayMessage(panelId, message) {
-    var panel = document.getElementById(panelId);
-    var messageDiv = document.createElement('div');
-    messageDiv.textContent = message;
-    panel.appendChild(messageDiv);
+function populateResponseOptions() {
+    var responses = [
+        "We called the patient.",
+        "The number is no answer.",
+        "The number is switched off or unreachable.",
+        "Doctor refused to talk.",
+        "We will transfer to the doctor later.",
+        "Appointment has been booked."
+    ];
+    var select = document.getElementById('responseSelect');
+    responses.forEach(response => {
+        var option = document.createElement('option');
+        option.value = response;
+        option.textContent = response;
+        select.appendChild(option);
+    });
 }
 
-// This function will automatically select the clinic staff when a doctor is chosen
-function selectStaffBasedOnDoctor() {
-    var doctor = document.getElementById('doctorSelect').value;
-    var staff = Object.keys(users).find(key => users[key].doctor === doctor);
-    if (staff) {
-        document.getElementById('userDetails').innerText += ' | Handling staff: ' + users[staff].clinicStaff;
+function sendResponse() {
+    var response = document.getElementById('responseSelect').value;
+    if (response) {
+        displayMessage('clinicMessages', response);
+    } else {
+        alert('Please select a response.');
     }
 }
