@@ -8,35 +8,14 @@
 </head>
 <body>
     <div id="loginPanel">
-    <!-- Login Form Here -->
-    <button id="loginButton">Login</button>
-</div>
-
-<div id="dashboard" style="display:none;">
-    <p id="userDetails"></p>
-    <div id="callCenterPanel">
-        <!-- Call Center Input Fields -->
-        <button onclick="sendCallCenterMessage()">Send Message</button>
+        <input type="text" id="username" placeholder="Username">
+        <input type="password" id="password" placeholder="Password">
+        <button id="loginButton">Login</button>
     </div>
-    <div id="clinicResponsePanel" style="display:none;">
-        <h2>Clinic Staff Panel</h2>
-        <select id="responseSelect">
-            <option value="">Select a response...</option>
-        </select>
-        <button onclick="sendResponse()">Send Response</button>
-    </div>
-    <div id="clinicMessages"></div>
-    <div id="leaderMessages"></div>
-</div>
 
-
-    <div id="dashboard" style="display: none;">
-        <h1>Email Dashboard</h1>
-        <div id="userInfo">
-            <h2>User Info</h2>
-            <p id="userDetails"></p>
-        </div>
-        <div id="callCenter">
+    <div id="dashboard" style="display:none;">
+        <p id="userDetails"></p>
+        <div id="callCenterPanel">
             <h2>Call Center Panel</h2>
             <input type="text" id="callerName" placeholder="Caller Name">
             <input type="text" id="contactInfo" placeholder="Contact Info">
@@ -47,19 +26,23 @@
                 <option value="billing">Billing Inquiry</option>
                 <option value="generalInfo">General Information</option>
             </select>
-            <select id="doctorSelect" onchange="selectStaffBasedOnDoctor()">
+            <select id="doctorSelect">
                 <option value="">Select Doctor...</option>
-                <option value="Dr. Smith">Dr. Smith</option>
-                <option value="Dr. Jones">Dr. Jones</option>
-                <option value="Dr. Brown">Dr. Brown</option>
+                <option value="drSmith">Dr. Smith</option>
+                <option value="drJones">Dr. Jones</option>
             </select>
             <button onclick="sendCallCenterMessage()">Send Message</button>
         </div>
-        <div id="clinicStaff">
+        <div id="clinicStaffPanel" style="display:none;">
             <h2>Clinic Staff Panel</h2>
+            <select id="responseSelect">
+                <option value="">Select a response...</option>
+                <!-- Response options populated by script -->
+            </select>
+            <button onclick="sendResponse()">Send Response</button>
             <div id="clinicMessages"></div>
         </div>
-        <div id="teamLeader">
+        <div id="teamLeaderPanel">
             <h2>Team Leader Panel</h2>
             <div id="leaderMessages"></div>
         </div>
