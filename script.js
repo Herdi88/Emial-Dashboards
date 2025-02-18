@@ -1,70 +1,50 @@
-const users = {
-    "Hardi": { password: "hardiPass123", role: "callCenter", floor: "3rd Floor", doctor: "Dr. Smith" },
-    "Alice": { password: "alicePass123", role: "clinicStaff", floor: "2nd Floor", doctor: "Dr. Jones" },
-    "Bob": { password: "bobPass123", role: "teamLeader", floor: "1st Floor", doctor: "Dr. Brown" }
-};
-
-document.getElementById('loginButton').addEventListener('click', function() {
-    var username = document.getElementById('username').value;
-    var password = document.getElementById('password').value;
-    var user = users[username];
-
-    if (user && user.password === password) {
-        document.getElementById('loginPanel').style.display = 'none';
-        document.getElementById('dashboard').style.display = 'block';
-        setupUserDashboard(user);
-    } else {
-        alert('Invalid credentials. Please try again.');
-    }
-});
-
-function setupUserDashboard(user) {
-    const userDetails = document.createElement('div');
-    userDetails.textContent = `Logged in as ${user.username}, assigned to ${user.doctor} on ${user.floor}. Role: ${user.role}`;
-    document.getElementById('dashboard').appendChild(userDetails);
-    // Further logic to display appropriate panels based on user role
-}
-
-         document.getElementById('callCenterPanel').style.display = 'block';
-            break;
-        case 'clinicStaff':
-            document.getElementById('clinicStaffPanel').style.display = 'block';
-            populateResponseOptions();
-            break;
-        case 'teamLeader':
-            document.getElementById('teamLeaderPanel').style.display = 'block';
-            break;
-    }
-}
-
-function populateResponseOptions() {
-    const responses = ["We called the patient.", "The number is no answer.", "Switched off or unreachable.", "Doctor refused to talk.", "Will transfer to the doctor later.", "Appointment has been booked."];
-    const select = document.getElementById('responseSelect');
-    responses.forEach(response => {
-        let option = document.createElement('option');
-        option.value = response;
-        option.textContent = response;
-        select.appendChild(option);
-    });
-}
-
-function sendCallCenterMessage() {
-    // Implement message sending logic here
-}
-
-function sendResponse() {
-    var response = document.getElementById('responseSelect').value;
-    if (response) {
-        displayMessage('clinicMessages', response);
-    } else {
-        alert('Please select a response.');
-    }
-}
-
-function displayMessage(panelId, message) {
-    var panel = document.getElementById(panelId);
-    var messageDiv = document.createElement('div');
-    messageDiv.textContent = message;
-    panel.appendChild(messageDiv);
-}
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="loginPanel">
+        <h1>Login Page</h1>
+        <input type="text" id="username" placeholder="Enter Username">
+        <input type="password" id="password" placeholder="Enter Password">
+        <button id="loginButton">Login</button>
+    </div>
+    
+    <div id="dashboard" style="display: none;">
+        <h1>Email Dashboard</h1>
+        <div id="userInfo"></div>
+        <div id="callCenter" style="display: none;">
+            <h2>Call Center Panel</h2>
+            <input type="text" id="callerName" placeholder="Caller Name">
+            <input type="text" id="contactInfo" placeholder="Contact Info">
+            <input type="text" id="mrn" placeholder="MRN">
+            <select id="inquiryReason">
+                <option value="">Select Reason...</option>
+                <option value="appointment">Appointment</option>
+                <option value="billing">Billing Inquiry</option>
+                <option value="generalInfo">General Information</option>
+            </select>
+            <select id="doctorSelect">
+                <option value="">Select Doctor...</option>
+                <option value="drSmith">Dr. Smith</option>
+                <option value="drJones">Dr. Jones</option>
+            </select>
+            <button onclick="sendMessage()">Send Message</button>
+        </div>
+        <div id="clinicStaff" style="display: none;">
+            <h2>Clinic Staff Panel</h2>
+            <div id="clinicMessages"></div>
+        </div>
+        <div id="teamLeader" style="display: none;">
+            <h2>Team Leader Panel</h2>
+            <div id="leaderMessages"></div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
