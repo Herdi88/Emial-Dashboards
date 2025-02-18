@@ -2,6 +2,10 @@ const users = {
     "Hardi": { password: "hardiPass123", floor: "3rd Floor", doctor: "Dr. Smith" },
     "Alice": { password: "alicePass123", floor: "2nd Floor", doctor: "Dr. Jones" },
     "Bob": { password: "bobPass123", floor: "1st Floor", doctor: "Dr. Brown" },
+const users = {
+    "Hardi": { password: "hardiPass123" },
+    "Alice": { password: "alicePass123" },
+    "Bob": { password: "bobPass123" },
 };
 
 function login() {
@@ -15,23 +19,18 @@ function login() {
     }
 }
 
-function sendMessage() {
-    var message = document.getElementById('messageInput').value.trim();
-    var inquiryReason = document.getElementById('inquiryReason').value;
-    var doctor = document.getElementById('doctorSelect').value;
-
-    if (!message) {
-        alert('Please enter a message.');
+function sendCallCenterMessage() {
+    var message = document.getElementById('callerName').value + ' ' +
+                  document.getElementById('contactInfo').value + ' ' +
+                  document.getElementById('mrn').value + ' - ' +
+                  document.getElementById('inquiryReason').value + ' - ' +
+                  document.getElementById('doctorSelect').value;
+    if (message.trim() === '') {
+        alert('Please fill out all fields.');
         return;
     }
-
-    var fullMessage = `Message: ${message}\nReason: ${inquiryReason}\nDoctor: ${doctor}`;
-    displayMessage('clinicMessages', fullMessage);
-    displayMessage('leaderMessages', fullMessage);
-
-    document.getElementById('messageInput').value = '';
-    document.getElementById('inquiryReason').selectedIndex = 0;
-    document.getElementById('doctorSelect').selectedIndex = 0;
+    displayMessage('clinicMessages', message);
+    displayMessage('leaderMessages', message);
 }
 
 function displayMessage(panelId, message) {
