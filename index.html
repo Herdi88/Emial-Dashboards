@@ -17,44 +17,11 @@
     <div id="dashboard" style="display: none;">
         <h1>Email Dashboard</h1>
         <div id="userInfo"></div>
-        <div id="messages">
-            <h3>Messages</h3>
-            <p>No new messages at this time.</p>
-        </div>
-        <div>
-            <h3>Send a Message:</h3>
-            <input type="text" id="messageInput" placeholder="Type your message here...">
-            <button onclick="sendMessage()">Send</button>
-        </div>
+        <div id="messages"></div>
+        <input type="text" id="messageInput" placeholder="Type your message here...">
+        <button onclick="sendMessage()">Send</button>
     </div>
 
-    <body>
-    <h1>Email Dashboard</h1>
-    <div id="callCenter">
-        <h2>Call Center Panel</h2>
-        <input type="text" id="messageInput" placeholder="Enter your message">
-        <select id="inquiryReason">
-            <option value="">Select Reason...</option>
-            <option value="appointment">Appointment</option>
-            <option value="billing">Billing Inquiry</option>
-            <option value="generalInfo">General Information</option>
-        </select>
-        <select id="doctorSelect">
-            <option value="">Select Doctor...</option>
-            <option value="drSmith">Dr. Smith</option>
-            <option value="drJones">Dr. Jones</option>
-        </select>
-        <button id="sendMessageButton">Send Message</button>
-    </div>
-    <div id="clinicStaff">
-        <h2>Clinic Staff Panel</h2>
-        <div id="clinicMessages"></div>
-    </div>
-    <div id="teamLeader">
-        <h2>Team Leader Panel</h2>
-        <div id="leaderMessages"></div>
-    </div>
     <script src="script.js"></script>
 </body>
 </html>
-
