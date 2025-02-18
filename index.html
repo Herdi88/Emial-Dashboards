@@ -17,14 +17,16 @@
     <div id="dashboard" style="display: none;">
         <h1>Email Dashboard</h1>
         <div id="userInfo"></div>
-        <div id="messages"></div>
+        <div id="messages">
+            <h3>Messages</h3>
+            <p>No new messages at this time.</p>
+        </div>
+        <div>
+            <h3>Send a Message:</h3>
+            <input type="text" id="messageInput" placeholder="Type your message here...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
     </div>
-<div id="dashboard" style="display: none;">
-    <h1>Email Dashboard</h1>
-    <div id="userInfo"></div>
-    <div id="messages"></div>
-    <button onclick="sendMessage()">Send Message</button>
-</div>
 
     <script src="script.js"></script>
 </body>
