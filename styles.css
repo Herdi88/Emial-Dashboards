@@ -1,31 +1,70 @@
-``css
 body {
-    font-family: sans-serif;
-    margin: 20px;
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
 }
 
 #loginPanel {
     width: 300px;
-    margin: 0 auto;
+    margin: 100px auto;
     padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#loginPanel h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #3498db;
 }
 
 #dashboard {
     width: 90%;
     margin: 20px auto;
     padding: 20px;
-    border: 1px solid #ccc;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+nav {
+    background-color: #3498db;
+    padding: 10px 0;
+    text-align: center;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+nav button {
+    background-color: #fff;
+    color: #3498db;
+    border: none;
+    padding: 10px 20px;
+    margin: 0 5px;
     border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+nav button:hover {
+    background-color: #eee;
+}
+
+nav button.active {
+    background-color: #3498db;
+    color: #fff;
 }
 
 .panel {
     display: none;
     margin-top: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 10px;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .panel.active {
@@ -34,15 +73,17 @@ body {
 
 .messages {
     margin-top: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid #ddd;
     border-radius: 5px;
     padding: 10px;
     min-height: 100px;
+    background-color: #f9f9f9;
 }
 
 .message {
     border-bottom: 1px solid #eee;
     padding: 5px 0;
+    margin-bottom: 10px;
 }
 
 .urgent {
@@ -58,40 +99,54 @@ body {
 }
 
 input[type="text"], input[type="password"], select {
-    width: 100%;
-    padding: 8px;
+    width: calc(100% - 22px);
+    padding: 10px;
     margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
     box-sizing: border-box;
+    font-size: 16px;
 }
 
 button {
-    background-color: #4CAF50;
+    background-color: #3498db;
     color: white;
-    padding: 10px 15px;
+    padding: 10px 20px;
     border: none;
-    border-radius: 3px;
+    border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 16px;
 }
 
 button:hover {
-    background-color: #45a049;
+    background-color: #2980b9;
 }
 
-nav {
+.filters {
     margin-bottom: 20px;
 }
 
-nav button {
-    margin-right: 10px;
-}
-.filters{
-    margin-bottom: 10px;
-}
 #notificationArea {
     margin-top: 20px;
-    border: 1px solid #ccc;
+    border: 1px solid #ddd;
     border-radius: 5px;
     padding: 10px;
+    background-color: #f9f9f9;
+}
+#notificationArea div{
+    padding: 5px;
+    border-bottom: 1px #ddd solid;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 600px) {
+    #loginPanel, #dashboard {
+        width: 95%;
+    }
+
+    nav button {
+        width: 100%;
+        margin-bottom: 5px;
+    }
 }
