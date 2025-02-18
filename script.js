@@ -1,44 +1,40 @@
-<!DOCTYPE html>
-        <html>
-        <head>
-        <title>Oops!</title>
-        ...
-document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('loginButton').addEventListener('click', login);
-});
-
 const users = {
-    "Hardi": { password: "hardiPass123", role: "callCenter", floor: "3rd Floor", doctor: "Dr. Smith" },
-    "Alice": { password: "alicePass123", role: "clinicStaff", floor: "2nd Floor", doctor: "Dr. Jones" },
-    "Bob": { password: "bobPass123", role: "teamLeader", floor: "1st Floor", doctor: "Dr. Brown" }
+    "Hardi": { password: "hardiPass123", floor: "3rd Floor", doctor: "Dr. Smith", clinicStaff: "Alice" },
+    "Alice": { password: "alicePass123", floor: "2nd Floor", doctor: "Dr. Jones", clinicStaff: "Bob" },
+    "Bob": { password: "bobPass123", floor: "1st Floor", doctor: "Dr. Brown", clinicStaff: "Charlie" },
 };
 
 function login() {
     var username = document.getElementById('username').value;
     var password = document.getElementById('password').value;
-    var user = users[username];
-
-    if (user && user.password === password) {
+    if (users[username] && users[username].password === password) {
         document.getElementById('loginPanel').style.display = 'none';
         document.getElementById('dashboard').style.display = 'block';
-        document.getElementById('userInfo').textContent = `Logged in as ${username}, assigned to ${user.doctor} on ${user.floor}.`;
-        displayAppropriatePanel(user.role);
+        document.getElementById('userDetails').innerText = `Logged in as ${username}, assigned to ${users[username].doctor} on ${users[username].floor}.`;
     } else {
         alert('Invalid credentials. Please try again.');
     }
 }
 
-function displayAppropriatePanel(role) {
-    document.getElementById('callCenter').style.display = role === 'callCenter' ? 'block' : 'none';
-    document.getElementById('clinicStaff').style.display = role === 'clinicStaff' ? 'block' : 'none';
-    document.getElementById('teamLeader').style.display = role === 'teamLeader' ? 'block' : 'none';
+function selectStaffBasedOnDoctor() {
+    var selectedDoctor = document.getElementById('doctorSelect').value;
+    var staffName = Object.keys(users).find(key => users[key].doctor === selectedDoctor);
+    alert('Messages will be handled by ' + users[staffName].clinicStaff);
 }
 
-function sendMessage() {
-    var message = document.getElementById('callerName').value;
-    var reason = document.getElementById('inquiryReason').value;
-    var doctor = document.getElementById('doctorSelect').value;
+function sendCallCenterMessage() {
+    var message = document.getElementById('callerName').value + ' - ' +
+                  document.getElementById('contactInfo').value + ' - ' +
+                  document.getElementById('mrn').value + ' - ' +
+                  document.getElementById('inquiryReason').value + ' - ' +
+                  document.getElementById('doctorSelect').value;
+    displayMessage('clinicMessages', message);
+    displayMessage('leaderMessages', message);
+}
 
-    console.log(`Message sent: ${message}, Reason: ${reason}, Doctor: ${doctor}`);
-    // Implement message sending logic here
+function displayMessage(panelId, message) {
+    var panel = document.getElementById(panelId);
+    var messageDiv = document.createElement('div');
+    messageDiv.textContent = message;
+    panel.appendChild(messageDiv);
 }
