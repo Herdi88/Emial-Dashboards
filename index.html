@@ -1,4 +1,3 @@
-``html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,13 +16,13 @@
 
     <div id="dashboard" style="display: none;">
         <nav>
-            <button id="callCenterNav" onclick="showPanel('callCenterPanel')">Call Center</button>
+            <button id="callCenterNav" onclick="showPanel('callCenterPanel')" class="active">Call Center</button>
             <button id="clinicStaffNav" onclick="showPanel('clinicStaffPanel')">Clinic Staff</button>
             <button id="teamLeaderNav" onclick="showPanel('teamLeaderPanel')">Team Leader</button>
             <button id="performanceNav" onclick="showPanel('performancePanel')">Performance</button>
         </nav>
 
-        <div id="callCenterPanel" class="panel">
+        <div id="callCenterPanel" class="panel active">
             <h2>Call Center</h2>
             <input type="text" id="callerName" placeholder="Caller Name">
             <input type="text" id="contactInfo" placeholder="Contact Info">
