@@ -1,3 +1,4 @@
+``html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,31 +16,59 @@
     </div>
 
     <div id="dashboard" style="display: none;">
-        <h2>Dashboard</h2>
-        <p id="userDetails"></p>
+        <nav>
+            <button id="callCenterNav" onclick="showPanel('callCenterPanel')">Call Center</button>
+            <button id="clinicStaffNav" onclick="showPanel('clinicStaffPanel')">Clinic Staff</button>
+            <button id="teamLeaderNav" onclick="showPanel('teamLeaderPanel')">Team Leader</button>
+            <button id="performanceNav" onclick="showPanel('performancePanel')">Performance</button>
+        </nav>
 
-        <div id="callCenterPanel">
-            <h3>Call Center</h3>
+        <div id="callCenterPanel" class="panel">
+            <h2>Call Center</h2>
             <input type="text" id="callerName" placeholder="Caller Name">
             <input type="text" id="contactInfo" placeholder="Contact Info">
             <input type="text" id="mrn" placeholder="MRN">
-            <input type="text" id="inquiryReason" placeholder="Inquiry Reason">
+            <select id="inquiryReason">
+                <option value="appointment">Appointment</option>
+                <option value="medication">Medication</option>
+                <option value="general">General Inquiry</option>
+            </select>
             <select id="doctorSelect">
                 <option value="Dr. Smith">Dr. Smith</option>
                 <option value="Dr. Jones">Dr. Jones</option>
                 <option value="Dr. Brown">Dr. Brown</option>
             </select>
             <button onclick="sendCallCenterMessage()">Send Message</button>
-            <button onclick="selectStaffBasedOnDoctor()">Find Staff</button>
+            <div id="callCenterMessages" class="messages"></div>
         </div>
 
-        <div id="messagePanels">
-            <div id="clinicMessages">
-                <h3>Clinic Messages</h3>
+        <div id="clinicStaffPanel" class="panel">
+            <h2>Clinic Staff</h2>
+            <div id="clinicStaffMessages" class="messages"></div>
+        </div>
+
+        <div id="teamLeaderPanel" class="panel">
+            <h2>Team Leader</h2>
+            <div id="teamLeaderMessages" class="messages"></div>
+            <div class="filters">
+                <label for="filterDoctor">Filter by Doctor:</label>
+                <select id="filterDoctor">
+                    <option value="all">All</option>
+                    <option value="Dr. Smith">Dr. Smith</option>
+                    <option value="Dr. Jones">Dr. Jones</option>
+                    <option value="Dr. Brown">Dr. Brown</option>
+                </select>
+                <button onclick="filterMessages()">Filter</button>
             </div>
-            <div id="leaderMessages">
-                <h3>Leader Messages</h3>
-            </div>
+        </div>
+
+        <div id="performancePanel" class="panel">
+            <h2>Performance Tracking</h2>
+            <div id="performanceMetrics"></div>
+        </div>
+
+        <div id="notificationArea">
+            <h2>Notifications</h2>
         </div>
     </div>
 
