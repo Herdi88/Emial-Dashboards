@@ -44,6 +44,12 @@ function loadUserMessages(username) {
 
 // Example function to simulate sending a message
 function sendMessage() {
+    var message = document.getElementById('messageInput').value;
     var messagesDiv = document.getElementById('messages');
-    messagesDiv.innerHTML += `<p>New message sent to ${users[username].doctor}.</p>`;
+    if (message.trim() !== "") {
+        messagesDiv.innerHTML += `<p>${message}</p>`;
+        document.getElementById('messageInput').value = ""; // Clear the input after sending
+    } else {
+        alert("Please type a message before sending.");
+    }
 }
