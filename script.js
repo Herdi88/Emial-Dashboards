@@ -4,27 +4,43 @@ const users = {
     "Bob": { password: "bobPass123", floor: "1st Floor", doctor: "Dr. Brown" },
 };
 
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('sendMessageButton').addEventListener('click', sendMessage);
+});
+
 function login() {
     var username = document.getElementById('username').value;
     var password = document.getElementById('password').value;
-    
     if (users[username] && users[username].password === password) {
         document.getElementById('loginPanel').style.display = 'none';
         document.getElementById('dashboard').style.display = 'block';
-        document.getElementById('userInfo').innerHTML = `You are logged in as ${username}, assigned to ${users[username].doctor} on ${users[username].floor}.`;
     } else {
         alert('Invalid credentials. Please try again.');
     }
 }
 
 function sendMessage() {
-    var messageInput = document.getElementById('messageInput');
-    var message = messageInput.value.trim();
-    if (message) {
-        var messagesDiv = document.getElementById('messages');
-        messagesDiv.innerHTML += `<p>${message}</p>`;
-        messageInput.value = ""; // Clear the input after sending
-    } else {
-        alert("Please type a message before sending.");
+    var message = document.getElementById('messageInput').value.trim();
+    var inquiryReason = document.getElementById('inquiryReason').value;
+    var doctor = document.getElementById('doctorSelect').value;
+
+    if (!message) {
+        alert('Please enter a message.');
+        return;
     }
+
+    var fullMessage = `Message: ${message}\nReason: ${inquiryReason}\nDoctor: ${doctor}`;
+    displayMessage('clinicMessages', fullMessage);
+    displayMessage('leaderMessages', fullMessage);
+
+    document.getElementById('messageInput').value = '';
+    document.getElementById('inquiryReason').selectedIndex = 0;
+    document.getElementById('doctorSelect').selectedIndex = 0;
+}
+
+function displayMessage(panelId, message) {
+    var panel = document.getElementById(panelId);
+    var messageDiv = document.createElement('div');
+    messageDiv.textContent = message;
+    panel.appendChild(messageDiv);
 }
