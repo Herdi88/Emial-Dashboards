@@ -1,4 +1,3 @@
-``javascript
 // Constants
 const LOGIN_PANEL_ID = 'loginPanel';
 const DASHBOARD_ID = 'dashboard';
@@ -30,9 +29,9 @@ let staffmessages = []
 function login() {
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
-    currentUserName = username;
+    currentUserName = username.toLowerCase();
 
-    const user = users[username.toLowerCase()];
+    const user = users[currentUserName];
 
     if (!username || !password) {
         displayLoginError('Please enter both username and password.');
@@ -145,7 +144,7 @@ function displayMessages() {
         }
 
         if (currentUserRole === 'clinicStaff' || currentUserRole === 'admin') {
-            if (message.selectedDoctor === users[currentUserName.toLowerCase()].doctor) {
+            if (message.selectedDoctor === users[currentUserName].doctor) {
                 clinicStaffMessages.appendChild(messageElement);
             }
         }
@@ -190,7 +189,7 @@ function createMessageElement(message) {
     }
 
     // Clinic Staff Reply
-    if (currentUserRole === 'clinicStaff' && message.replies.length === 0 && message.selectedDoctor === users[currentUserName.toLowerCase()].doctor ) {
+    if (currentUserRole === 'clinicStaff' && message.replies.length === 0 && message.selectedDoctor === users[currentUserName].doctor ) {
         const replyButton = document.createElement('button');
         replyButton.textContent = 'Call completed';
         replyButton.onclick = () => replyToMessage(message.id, 'Call completed');
@@ -242,6 +241,7 @@ function flagMessage(messageId) {
         message.isUrgent = true;
         const messageElement = document.getElementById(`message-${messageId}`);
         messageElement.classList.add("urgent")
+        displayMessages();
         addNotification(`Message for ${message.selectedDoctor} marked as urgent!`);
     }
 }
@@ -252,6 +252,7 @@ function markDelay(messageId) {
         message.isDelayed = true;
         const messageElement = document.getElementById(`message-${messageId}`);
         messageElement.classList.add("delayed")
+        displayMessages();
         addNotification(`Message for ${message.selectedDoctor} marked as delayed!`);
     }
 }
