@@ -10,16 +10,10 @@ function login() {
     if (users[username] && users[username].password === password) {
         document.getElementById('loginPanel').style.display = 'none';
         document.getElementById('dashboard').style.display = 'block';
-        document.getElementById('userDetails').innerText = `Logged in as ${username}, assigned to ${users[username].doctor} on ${users[username].floor}.`;
+        document.getElementById('userDetails').innerText = `Logged in as ${username}, assigned to ${users[username].doctor} on ${users[username].floor}. Clinic staff responsible: ${users[username].clinicStaff}.`;
     } else {
         alert('Invalid credentials. Please try again.');
     }
-}
-
-function selectStaffBasedOnDoctor() {
-    var selectedDoctor = document.getElementById('doctorSelect').value;
-    var staffName = Object.keys(users).find(key => users[key].doctor === selectedDoctor);
-    alert('Messages will be handled by ' + users[staffName].clinicStaff);
 }
 
 function sendCallCenterMessage() {
@@ -28,8 +22,13 @@ function sendCallCenterMessage() {
                   document.getElementById('mrn').value + ' - ' +
                   document.getElementById('inquiryReason').value + ' - ' +
                   document.getElementById('doctorSelect').value;
-    displayMessage('clinicMessages', message);
-    displayMessage('leaderMessages', message);
+    if (!message.replace(/\s+-\s+/g, '').trim()) {
+        alert('Please fill out all fields.');
+        return;
+    }
+    // Simulate different message formatting for different panels
+    displayMessage('clinicMessages', 'Clinic: ' + message);
+    displayMessage('leaderMessages', 'Leader: ' + message);
 }
 
 function displayMessage(panelId, message) {
@@ -37,4 +36,13 @@ function displayMessage(panelId, message) {
     var messageDiv = document.createElement('div');
     messageDiv.textContent = message;
     panel.appendChild(messageDiv);
+}
+
+// This function will automatically select the clinic staff when a doctor is chosen
+function selectStaffBasedOnDoctor() {
+    var doctor = document.getElementById('doctorSelect').value;
+    var staff = Object.keys(users).find(key => users[key].doctor === doctor);
+    if (staff) {
+        document.getElementById('userDetails').innerText += ' | Handling staff: ' + users[staff].clinicStaff;
+    }
 }
