@@ -1,50 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Email Dashboard</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <div id="loginPanel">
-        <h1>Login Page</h1>
-        <input type="text" id="username" placeholder="Enter Username">
-        <input type="password" id="password" placeholder="Enter Password">
-        <button id="loginButton">Login</button>
-    </div>
-    
-    <div id="dashboard" style="display: none;">
-        <h1>Email Dashboard</h1>
-        <div id="userInfo"></div>
-        <div id="callCenter" style="display: none;">
-            <h2>Call Center Panel</h2>
-            <input type="text" id="callerName" placeholder="Caller Name">
-            <input type="text" id="contactInfo" placeholder="Contact Info">
-            <input type="text" id="mrn" placeholder="MRN">
-            <select id="inquiryReason">
-                <option value="">Select Reason...</option>
-                <option value="appointment">Appointment</option>
-                <option value="billing">Billing Inquiry</option>
-                <option value="generalInfo">General Information</option>
-            </select>
-            <select id="doctorSelect">
-                <option value="">Select Doctor...</option>
-                <option value="drSmith">Dr. Smith</option>
-                <option value="drJones">Dr. Jones</option>
-            </select>
-            <button onclick="sendMessage()">Send Message</button>
-        </div>
-        <div id="clinicStaff" style="display: none;">
-            <h2>Clinic Staff Panel</h2>
-            <div id="clinicMessages"></div>
-        </div>
-        <div id="teamLeader" style="display: none;">
-            <h2>Team Leader Panel</h2>
-            <div id="leaderMessages"></div>
-        </div>
-    </div>
-    
-    <script src="script.js"></script>
-</body>
-</html>
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('loginButton').addEventListener('click', login);
+});
+
+const users = {
+    "Hardi": { password: "hardiPass123", role: "callCenter", floor: "3rd Floor", doctor: "Dr. Smith" },
+    "Alice": { password: "alicePass123", role: "clinicStaff", floor: "2nd Floor", doctor: "Dr. Jones" },
+    "Bob": { password: "bobPass123", role: "teamLeader", floor: "1st Floor", doctor: "Dr. Brown" }
+};
+
+function login() {
+    var username = document.getElementById('username').value;
+    var password = document.getElementById('password').value;
+    var user = users[username];
+    if (user && user.password === password) {
+        document.getElementById('loginPanel').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+        document.getElementById('userInfo').textContent = `Logged in as ${username}, assigned to ${user.doctor} on ${user.floor}.`;
+        displayAppropriatePanel(user.role);
+    } else {
+        alert('Invalid credentials. Please try again.');
+    }
+}
+
+function displayAppropriatePanel(role) {
+    document.getElementById(role).style.display = 'block';
+}
+
+function sendMessage() {
+    var message = document.getElementById('callerName').value;
+    var reason = document.getElementById('inquiryReason').value;
+    var doctor = document.getElementById('doctorSelect').value;
+    console.log(`Message sent: ${message}, Reason: ${reason}, Doctor: ${doctor}`);
+    // Implement message sending logic here
+}
