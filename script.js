@@ -12,6 +12,7 @@ function login() {
     var username = document.getElementById('username').value;
     var password = document.getElementById('password').value;
     var user = users[username];
+
     if (user && user.password === password) {
         document.getElementById('loginPanel').style.display = 'none';
         document.getElementById('dashboard').style.display = 'block';
@@ -23,13 +24,16 @@ function login() {
 }
 
 function displayAppropriatePanel(role) {
-    document.getElementById(role).style.display = 'block';
+    document.getElementById('callCenter').style.display = role === 'callCenter' ? 'block' : 'none';
+    document.getElementById('clinicStaff').style.display = role === 'clinicStaff' ? 'block' : 'none';
+    document.getElementById('teamLeader').style.display = role === 'teamLeader' ? 'block' : 'none';
 }
 
 function sendMessage() {
     var message = document.getElementById('callerName').value;
     var reason = document.getElementById('inquiryReason').value;
     var doctor = document.getElementById('doctorSelect').value;
+
     console.log(`Message sent: ${message}, Reason: ${reason}, Doctor: ${doctor}`);
     // Implement message sending logic here
 }
