@@ -1,3 +1,4 @@
+``css
 body {
     font-family: sans-serif;
     margin: 20px;
@@ -12,26 +13,48 @@ body {
 }
 
 #dashboard {
-    width: 80%;
+    width: 90%;
     margin: 20px auto;
     padding: 20px;
     border: 1px solid #ccc;
     border-radius: 5px;
 }
 
-#callCenterPanel, #messagePanels {
+.panel {
+    display: none;
     margin-top: 20px;
     border: 1px solid #ccc;
     border-radius: 5px;
     padding: 10px;
 }
 
-#clinicMessages, #leaderMessages {
+.panel.active {
+    display: block;
+}
+
+.messages {
     margin-top: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
     padding: 10px;
-    min-height: 50px;
+    min-height: 100px;
+}
+
+.message {
+    border-bottom: 1px solid #eee;
+    padding: 5px 0;
+}
+
+.urgent {
+    background-color: #ffe0e0;
+}
+
+.delayed {
+    background-color: #fff0e0;
+}
+
+.replied {
+    color: grey;
 }
 
 input[type="text"], input[type="password"], select {
@@ -54,4 +77,21 @@ button {
 
 button:hover {
     background-color: #45a049;
+}
+
+nav {
+    margin-bottom: 20px;
+}
+
+nav button {
+    margin-right: 10px;
+}
+.filters{
+    margin-bottom: 10px;
+}
+#notificationArea {
+    margin-top: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
 }
