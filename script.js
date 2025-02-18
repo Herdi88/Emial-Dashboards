@@ -1,41 +1,54 @@
-const users = {
-    "Hardi": { password: "hardiPass123", floor: "3rd Floor", doctor: "Dr. Smith" },
-    "Alice": { password: "alicePass123", floor: "2nd Floor", doctor: "Dr. Jones" },
-    "Bob": { password: "bobPass123", floor: "1st Floor", doctor: "Dr. Brown" },
-const users = {
-    "Hardi": { password: "hardiPass123" },
-    "Alice": { password: "alicePass123" },
-    "Bob": { password: "bobPass123" },
-};
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="loginPanel">
+        <h2>Login</h2>
+        <input type="text" id="username" placeholder="Enter Username">
+        <input type="password" id="password" placeholder="Enter Password">
+        <button onclick="login()">Login</button>
+    </div>
 
-function login() {
-    var username = document.getElementById('username').value;
-    var password = document.getElementById('password').value;
-    if (users[username] && users[username].password === password) {
-        document.getElementById('loginPanel').style.display = 'none';
-        document.getElementById('dashboard').style.display = 'block';
-    } else {
-        alert('Invalid credentials. Please try again.');
-    }
-}
+    <div id="dashboard" style="display: none;">
+        <h1>Email Dashboard</h1>
+        <div id="userInfo">
+            <h2>User Info</h2>
+            <p id="userDetails"></p>
+        </div>
+        <div id="callCenter">
+            <h2>Call Center Panel</h2>
+            <input type="text" id="callerName" placeholder="Caller Name">
+            <input type="text" id="contactInfo" placeholder="Contact Info">
+            <input type="text" id="mrn" placeholder="MRN">
+            <select id="inquiryReason">
+                <option value="">Select Reason...</option>
+                <option value="appointment">Appointment</option>
+                <option value="billing">Billing Inquiry</option>
+                <option value="generalInfo">General Information</option>
+            </select>
+            <select id="doctorSelect" onchange="selectStaffBasedOnDoctor()">
+                <option value="">Select Doctor...</option>
+                <option value="Dr. Smith">Dr. Smith</option>
+                <option value="Dr. Jones">Dr. Jones</option>
+                <option value="Dr. Brown">Dr. Brown</option>
+            </select>
+            <button onclick="sendCallCenterMessage()">Send Message</button>
+        </div>
+        <div id="clinicStaff">
+            <h2>Clinic Staff Panel</h2>
+            <div id="clinicMessages"></div>
+        </div>
+        <div id="teamLeader">
+            <h2>Team Leader Panel</h2>
+            <div id="leaderMessages"></div>
+        </div>
+    </div>
 
-function sendCallCenterMessage() {
-    var message = document.getElementById('callerName').value + ' ' +
-                  document.getElementById('contactInfo').value + ' ' +
-                  document.getElementById('mrn').value + ' - ' +
-                  document.getElementById('inquiryReason').value + ' - ' +
-                  document.getElementById('doctorSelect').value;
-    if (message.trim() === '') {
-        alert('Please fill out all fields.');
-        return;
-    }
-    displayMessage('clinicMessages', message);
-    displayMessage('leaderMessages', message);
-}
-
-function displayMessage(panelId, message) {
-    var panel = document.getElementById(panelId);
-    var messageDiv = document.createElement('div');
-    messageDiv.textContent = message;
-    panel.appendChild(messageDiv);
-}
+    <script src="script.js"></script>
+</body>
+</html>
