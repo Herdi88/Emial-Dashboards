@@ -5,26 +5,29 @@ const users = {
     "Bob": { password: "bobPass123", floor: "1st Floor", doctor: "Dr. Brown" },
 };
 
-document.addEventListener('DOMContentLoaded', function() {
-    var sendMessageButton = document.getElementById('sendMessageButton');
-    if (sendMessageButton) {
-        sendMessageButton.addEventListener('click', sendMessage);
-    }
-});
-
 function login() {
     var username = document.getElementById('username').value;
     var password = document.getElementById('password').value;
-    
-    if (users[username] && users[username].password === password) {
-        document.getElementById('loginPanel').style.display = 'none';
-        document.getElementById('dashboard').style.display = 'block';
-        alert(username + ' from ' + users[username].floor + ' logged in successfully!');
-        displayUserSpecificInfo(username);
+
+    console.log('Username:', username); // Debug output
+    console.log('Password:', password); // Debug output
+
+    // Check if the username exists and if so, compare the password
+    if (users[username]) {
+        if (users[username].password === password) {
+            document.getElementById('loginPanel').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+            alert(username + ' from ' + users[username].floor + ' logged in successfully!');
+        } else {
+            console.log('Password incorrect for user:', username); // Debug output
+            alert('Invalid credentials. Please try again.');
+        }
     } else {
+        console.log('Username not found:', username); // Debug output
         alert('Invalid credentials. Please try again.');
     }
 }
+
 
 function displayUserSpecificInfo(username) {
     // Display information relevant to the user's floor or doctor
