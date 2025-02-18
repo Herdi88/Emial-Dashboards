@@ -28,14 +28,22 @@ function login() {
     }
 }
 
-
 function displayUserSpecificInfo(username) {
-    // Display information relevant to the user's floor or doctor
     var userInfoDiv = document.getElementById('userInfo');
     userInfoDiv.innerHTML = `<p>You are logged in as ${username}, assigned to ${users[username].doctor} on ${users[username].floor}.</p>`;
+    loadUserMessages(username);
 }
 
+function loadUserMessages(username) {
+    var messagesDiv = document.getElementById('messages');
+    // Example message loading
+    messagesDiv.innerHTML = `<h2>Messages for ${users[username].doctor}</h2>`;
+    messagesDiv.innerHTML += `<p>No new messages at this time.</p>`;
+    // Here you could fetch real messages from a server or simulate messages for demo purposes
+}
+
+// Example function to simulate sending a message
 function sendMessage() {
-    // Add logic here to handle sending a message based on the form inputs
-    alert('Message sent');
+    var messagesDiv = document.getElementById('messages');
+    messagesDiv.innerHTML += `<p>New message sent to ${users[username].doctor}.</p>`;
 }
