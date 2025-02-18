@@ -4,10 +4,6 @@ const users = {
     "Bob": { password: "bobPass123", floor: "1st Floor", doctor: "Dr. Brown" },
 };
 
-document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('sendMessageButton').addEventListener('click', sendMessage);
-});
-
 function login() {
     var username = document.getElementById('username').value;
     var password = document.getElementById('password').value;
