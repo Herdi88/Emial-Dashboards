@@ -5,8 +5,6 @@ const USER_DETAILS_ID = 'userDetails';
 const CLINIC_MESSAGES_ID = 'clinicMessages';
 const LEADER_MESSAGES_ID = 'leaderMessages';
 
-// data file
-
 // Sample user data (in reality, this would come from a secure backend)
 const users = {
     "Hardi": { password: "hardiPass123", floor: "3rd Floor", doctor: "Dr. Smith", clinicStaff: "Alice" },
@@ -43,7 +41,11 @@ function displayLoginError(message) {
 function selectStaffBasedOnDoctor() {
     const selectedDoctor = document.getElementById('doctorSelect').value;
     const staffName = Object.keys(users).find(key => users[key].doctor === selectedDoctor);
+    if (staffName) {
     alert('Messages will be handled by ' + users[staffName].clinicStaff);
+    } else {
+    alert("no Staff with that Doctor found.");
+    }
 }
 
 function sendCallCenterMessage() {
