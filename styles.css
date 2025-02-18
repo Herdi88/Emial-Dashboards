@@ -16,7 +16,7 @@ body {
     margin: auto;
 }
 
-input[type="text"], input[type="password"], select, button {
+input[type="text"], input[type="password"], button {
     width: 100%;
     padding: 8px;
     margin-top: 10px;
@@ -30,16 +30,6 @@ button {
     border: none;
     cursor: pointer;
     font-size: 16px;
-}
-#messages {
-    margin-top: 20px;
-    padding: 10px;
-    background-color: #eef;
-    border: 1px solid #ccd;
-}
-
-button {
-    margin-top: 10px;
 }
 
 button:hover {
