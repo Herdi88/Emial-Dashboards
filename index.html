@@ -3,25 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
+    <title>Email Dashboard</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div id="loginPanel">
-        <input type="text" id="username" placeholder="Username">
-        <input type="password" id="password" placeholder="Password">
+        <h1>Login Page</h1>
+        <input type="text" id="username" placeholder="Enter Username">
+        <input type="password" id="password" placeholder="Enter Password">
         <button id="loginButton">Login</button>
     </div>
+    
     <div id="dashboard" style="display: none;">
-        <!-- Dashboard content will go here -->
-    </div>
-    <script src="script.js"></script>
-</body>
-</html>
-
-    <div id="dashboard" style="display:none;">
-        <p id="userDetails"></p>
-        <div id="callCenterPanel">
+        <h1>Email Dashboard</h1>
+        <div id="userInfo"></div>
+        <div id="callCenter" style="display: none;">
             <h2>Call Center Panel</h2>
             <input type="text" id="callerName" placeholder="Caller Name">
             <input type="text" id="contactInfo" placeholder="Contact Info">
@@ -37,23 +33,18 @@
                 <option value="drSmith">Dr. Smith</option>
                 <option value="drJones">Dr. Jones</option>
             </select>
-            <button onclick="sendCallCenterMessage()">Send Message</button>
+            <button onclick="sendMessage()">Send Message</button>
         </div>
-        <div id="clinicStaffPanel" style="display:none;">
+        <div id="clinicStaff" style="display: none;">
             <h2>Clinic Staff Panel</h2>
-            <select id="responseSelect">
-                <option value="">Select a response...</option>
-                <!-- Response options populated by script -->
-            </select>
-            <button onclick="sendResponse()">Send Response</button>
             <div id="clinicMessages"></div>
         </div>
-        <div id="teamLeaderPanel">
+        <div id="teamLeader" style="display: none;">
             <h2>Team Leader Panel</h2>
             <div id="leaderMessages"></div>
         </div>
     </div>
-
+    
     <script src="script.js"></script>
 </body>
 </html>
