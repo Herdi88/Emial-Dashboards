@@ -2,6 +2,7 @@
         <html>
         <head>
         <title>Oops!</title>
+        ...
 document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('loginButton').addEventListener('click', login);
 });
