@@ -55,18 +55,37 @@ function showDashboard() {
 }
 
 function sendCallCenterMessage() {
-    const message = {
-        id: Date.now(),
-        callerName: document.getElementById('callerName').value,
-        contactInfo: document.getElementById('contactInfo').value,
-        mrn: document.getElementById('mrn').value,
-        inquiryReason: document.getElementById('inquiryReason').value,
-        selectedDoctor: document.getElementById('doctorSelect').value,
-        replies: []
+    const callerName = document.getElementById('callerName').value;
+    const contactInfo = document.getElementById('contactInfo').value;
+    const mrn = document.getElementById('mrn').value;
+    const inquiryReason = document.getElementById('inquiryReason').value;
+    const selectedDoctor = document.getElementById('doctorSelect').value;
+
+    if (!callerName || !contactInfo || !mrn || !inquiryReason || !selectedDoctor) {
+        alert("Please fill in all fields.");
+        return;
+    }
+
+    const newMessage = {
+        callerName,
+        contactInfo,
+        mrn,
+        inquiryReason,
+        selectedDoctor,
+        timestamp: new Date(),
+        isUrgent: false,
+        isDelayed: false,
+        replies: [],
+        repliedAt: null, // NEW FIELD TO TRACK REPLY TIME
+        sender: currentUserName,
+        id: Date.now()
     };
 
-    messages.push(message);
+    messages.push(newMessage);
     displayMessages();
+    addNotification(`New Message from ${callerName} for ${selectedDoctor}`);
+}
+
 }
 
     function displayMessages() {
