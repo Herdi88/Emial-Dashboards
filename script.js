@@ -86,8 +86,6 @@ function sendCallCenterMessage() {
     addNotification(`New Message from ${callerName} for ${selectedDoctor}`);
 }
 
-}
-
     function displayMessages() {
     const callCenterMessages = document.getElementById(CALL_CENTER_MESSAGES_ID);
     const clinicStaffMessages = document.getElementById(CLINIC_STAFF_MESSAGES_ID);
