@@ -9,11 +9,11 @@ const NOTIFICATION_AREA_ID = 'notificationsContainer';
 
 // User Data (expanded for roles)
 const users = {
-    "hardi": { password: "hardiPass123", role: "teamLeader", doctor: "Dr. Smith" },
-    "alice": { password: "alicePass123", role: "clinicStaff", doctor: "Dr. Jones" },
-    "bob": { password: "bobPass123", role: "clinicStaff", doctor: "Dr. Brown" },
-    "charlie": { password: "charliePass123", role: "callCenter" },
-    "admin": { password: "adminPass123", role: "admin" }
+    "hardi": { password: "hardiPass123", role: "teamLeader", floor: "3rd Floor", doctor: "Dr. Smith", clinicStaff: "Alice" },
+    "alice": { password: "alicePass123", role: "clinicStaff", floor: "2nd Floor", doctor: "Dr. Jones", clinicStaff: "Bob" },
+    "bob": { password: "bobPass123", role: "clinicStaff", floor: "1st Floor", doctor: "Dr. Brown", clinicStaff: "Charlie" },
+    "charlie": { password: "charliePass123", role: "callCenter", floor: "1st Floor", doctor: null, clinicStaff: null },
+    "admin": { password: "adminPass123", role: "admin", floor: "N/A", doctor: "N/A", clinicStaff: "N/A" }
 };
 
 let messages = [];
