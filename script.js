@@ -99,15 +99,46 @@ function showPanel(panelId) {
     document.getElementById(panelId).classList.add('active');
 }
 
-window.onload = function () {
-    const savedRole = localStorage.getItem('userRole');
-    const savedUserName = localStorage.getItem('userName');
-    if (savedRole && savedUserName) {
-        currentUserRole = savedRole;
-        currentUserName = savedUserName;
-        showDashboard();
-    }
-};
+function displayMessages() {
+    const callCenterMessages = document.getElementById(CALL_CENTER_MESSAGES_ID);
+    const clinicStaffMessages = document.getElementById(CLINIC_STAFF_MESSAGES_ID);
+    const teamLeaderMessages = document.getElementById(TEAM_LEADER_MESSAGES_ID);
+    callCenterMessages.innerHTML = '';
+    clinicStaffMessages.innerHTML = '';
+    teamLeaderMessages.innerHTML = '';
+
+    messages.forEach(message => {
+        const messageElement = createMessageElement(message);
+        if (currentUserRole === 'callCenter' || currentUserRole === 'admin') {
+            callCenterMessages.appendChild(messageElement);
+        }
+        if (currentUserRole === 'clinicStaff' || currentUserRole === 'admin') {
+            if (message.selectedDoctor === users[currentUserName].doctor) {
+                clinicStaffMessages.appendChild(messageElement);
+            }
+        }
+        if (currentUserRole === 'teamLeader' || currentUserRole === 'admin') {
+            teamLeaderMessages.appendChild(messageElement);
+        }
+    });
+
+    updatePerformanceMetrics();
+}
+function updatePerformanceMetrics() {
+    const totalMessages = messages.length;
+    const urgentMessages = messages.filter(msg => msg.isUrgent).length;
+    const delayedMessages = messages.filter(msg => msg.isDelayed).length;
+    const completedCalls = messages.filter(msg => msg.replies.includes('Call completed')).length;
+
+    const performanceMetricsDiv = document.getElementById(PERFORMANCE_METRICS_ID);
+    performanceMetricsDiv.innerHTML = `
+        <p><strong>Total Messages:</strong> ${totalMessages}</p>
+        <p><strong>Urgent Messages:</strong> ${urgentMessages}</p>
+        <p><strong>Delayed Messages:</strong> ${delayedMessages}</p>
+        <p><strong>Completed Calls:</strong> ${completedCalls}</p>
+    `;
+}
+
 
 
 function sendCallCenterMessage() {
