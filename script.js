@@ -103,24 +103,33 @@ function displayMessages() {
     const callCenterMessages = document.getElementById(CALL_CENTER_MESSAGES_ID);
     const clinicStaffMessages = document.getElementById(CLINIC_STAFF_MESSAGES_ID);
     const teamLeaderMessages = document.getElementById(TEAM_LEADER_MESSAGES_ID);
+
     callCenterMessages.innerHTML = '';
     clinicStaffMessages.innerHTML = '';
     teamLeaderMessages.innerHTML = '';
 
     messages.forEach(message => {
         const messageElement = createMessageElement(message);
+
         if (currentUserRole === 'callCenter' || currentUserRole === 'admin') {
             callCenterMessages.appendChild(messageElement);
         }
+
         if (currentUserRole === 'clinicStaff' || currentUserRole === 'admin') {
             if (message.selectedDoctor === users[currentUserName].doctor) {
                 clinicStaffMessages.appendChild(messageElement);
             }
         }
+
         if (currentUserRole === 'teamLeader' || currentUserRole === 'admin') {
             teamLeaderMessages.appendChild(messageElement);
         }
     });
+
+    // THIS IS THE IMPORTANT LINE!
+    updatePerformanceMetrics();
+}
+
 
     updatePerformanceMetrics();
     <div id="performancePanel" class="panel">
