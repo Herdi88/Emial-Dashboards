@@ -283,9 +283,13 @@ function filterMessages() {
 function addNotification(message) {
     const notificationArea = document.getElementById(NOTIFICATION_AREA_ID);
     const notificationDiv = document.createElement('div');
-    notificationDiv.textContent = message;
+    notificationDiv.classList.add('notification-item');
+    const timestamp = new Date().toLocaleTimeString();
+
+    notificationDiv.innerHTML = `<strong>${timestamp}</strong> - ${message}`;
     notificationArea.appendChild(notificationDiv);
 }
+
 // Check LocalStorage for saved login role
 window.onload = function () {
     const savedRole = localStorage.getItem('userRole');
