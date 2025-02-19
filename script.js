@@ -9,11 +9,17 @@ const NOTIFICATION_AREA_ID = 'notificationsContainer';
 
 // User Data (expanded for roles)
 const users = {
-    "hardi": { password: "hardiPass123", role: "teamLeader", doctor: "Dr. Smith" },
-    "alice": { password: "alicePass123", role: "clinicStaff", doctor: "Dr. Jones" },
-    "bob": { password: "bobPass123", role: "clinicStaff", doctor: "Dr. Brown" },
+    "hardi": { password: "hardiPass123", role: "teamLeader" },
+    "alice": { password: "alicePass123", role: "clinicStaff", assignedClinic: "alice" },
+    "bob": { password: "bobPass123", role: "clinicStaff", assignedClinic: "bob" },
     "charlie": { password: "charliePass123", role: "callCenter" },
     "admin": { password: "adminPass123", role: "admin" }
+};
+
+const doctorToClinicStaff = {
+    "Dr. Smith": "alice",
+    "Dr. Jones": "bob",
+    "Dr. Brown": "bob"
 };
 
 let messages = [];
@@ -21,22 +27,19 @@ let currentUserRole = null;
 let currentUserName = null;
 
 // Functions
+
 function login() {
     const username = document.getElementById('username').value.trim().toLowerCase();
     const password = document.getElementById('password').value;
-
     const user = users[username];
-
-    if (!username || !password) {
-        alert('Please enter both username and password.');
-        return;
-    }
 
     if (user && user.password === password) {
         currentUserRole = user.role;
         currentUserName = username;
+
         localStorage.setItem('userRole', currentUserRole);
         localStorage.setItem('userName', currentUserName);
+
         showDashboard();
     } else {
         alert('Invalid credentials. Please try again.');
@@ -55,7 +58,6 @@ function showDashboard() {
     document.getElementById(LOGIN_PANEL_ID).style.display = 'none';
     document.getElementById(DASHBOARD_ID).style.display = 'block';
     displayMessages();
-    updatePerformanceMetrics();
 }
 
 function showPanel(panelId) {
@@ -75,6 +77,8 @@ function sendCallCenterMessage() {
         return;
     }
 
+    const assignedClinicStaff = doctorToClinicStaff[selectedDoctor];
+
     const newMessage = {
         id: Date.now(),
         callerName,
@@ -82,17 +86,17 @@ function sendCallCenterMessage() {
         mrn,
         inquiryReason,
         selectedDoctor,
+        clinicStaff: assignedClinicStaff,
         timestamp: new Date(),
-        isUrgent: false,
-        isDelayed: false,
         replies: [],
         repliedAt: null,
-        sender: currentUserName
+        sender: currentUserName,
+        isUrgent: false,
+        isDelayed: false
     };
 
     messages.push(newMessage);
     displayMessages();
-    addNotification(`New Message from ${callerName} for ${selectedDoctor}`);
 }
 
 function displayMessages() {
@@ -111,7 +115,7 @@ function displayMessages() {
             callCenterMessages.appendChild(messageElement);
         }
 
-        if (currentUserRole === 'clinicStaff' && message.selectedDoctor === users[currentUserName]?.doctor) {
+        if (currentUserRole === 'clinicStaff' && message.clinicStaff === currentUserName) {
             clinicStaffMessages.appendChild(messageElement);
         }
 
@@ -119,6 +123,7 @@ function displayMessages() {
             teamLeaderMessages.appendChild(messageElement);
         }
     });
+
     updatePerformanceMetrics();
 }
 
@@ -126,40 +131,49 @@ function createMessageElement(message) {
     const messageDiv = document.createElement('div');
     messageDiv.classList.add('message');
 
-    const now = new Date();
-    const oneHour = 60 * 60 * 1000;
-
-    if (!message.repliedAt && (now - new Date(message.timestamp)) > oneHour) {
-        message.isUrgent = true;
-    }
-
     messageDiv.innerHTML = `
         <p><strong>Caller:</strong> ${message.callerName}</p>
         <p><strong>Doctor:</strong> ${message.selectedDoctor}</p>
-        <p><strong>Sent at:</strong> ${new Date(message.timestamp).toLocaleTimeString()}</p>
-        ${message.repliedAt ? `<p><strong>Replied At:</strong> ${new Date(message.repliedAt).toLocaleTimeString()}</p>` : '<p style="color: red;">Pending Reply</p>'}
+        <p><strong>Sender (Call Center):</strong> ${message.sender}</p>
+        <p><strong>Assigned Clinic Staff:</strong> ${message.clinicStaff}</p>
+        <p><strong>Timestamp:</strong> ${new Date(message.timestamp).toLocaleString()}</p>
     `;
+
+    if (message.repliedAt) {
+        messageDiv.innerHTML += `<p><strong>Replied At:</strong> ${new Date(message.repliedAt).toLocaleString()}</p>`;
+    }
+
+    if (currentUserRole === 'clinicStaff' && message.clinicStaff === currentUserName && message.replies.length === 0) {
+        ['Call completed', 'Unreachable', 'Appointment booked'].forEach(replyText => {
+            const button = document.createElement('button');
+            button.textContent = replyText;
+            button.onclick = () => replyToMessage(message.id, replyText);
+            messageDiv.appendChild(button);
+        });
+    }
+
     return messageDiv;
 }
 
-function updatePerformanceMetrics() {
-    const performanceMetricsDiv = document.getElementById(PERFORMANCE_METRICS_ID);
-    performanceMetricsDiv.innerHTML = '<p>Performance data will go here.</p>';
+function replyToMessage(id, reply) {
+    const message = messages.find(msg => msg.id === id);
+    if (message) {
+        message.replies.push(reply);
+        message.repliedAt = new Date();
+        displayMessages();
+    }
 }
 
-function addNotification(message) {
-    const notificationArea = document.getElementById(NOTIFICATION_AREA_ID);
-    const notificationDiv = document.createElement('div');
-    notificationDiv.textContent = message;
-    notificationArea.appendChild(notificationDiv);
+function updatePerformanceMetrics() {
+    const metricsDiv = document.getElementById(PERFORMANCE_METRICS_ID);
+    const responseTimes = messages.filter(m => m.repliedAt).map(m => (new Date(m.repliedAt) - new Date(m.timestamp)) / 60000);
+    const avgResponseTime = responseTimes.length ? (responseTimes.reduce((a, b) => a + b) / responseTimes.length).toFixed(2) : 'N/A';
+
+    metricsDiv.innerHTML = `<p>Average Response Time: ${avgResponseTime} minutes</p>`;
 }
 
 window.onload = function () {
-    const savedRole = localStorage.getItem('userRole');
-    const savedUserName = localStorage.getItem('userName');
-    if (savedRole && savedUserName) {
-        currentUserRole = savedRole;
-        currentUserName = savedUserName;
-        showDashboard();
-    }
+    currentUserRole = localStorage.getItem('userRole');
+    currentUserName = localStorage.getItem('userName');
+    if (currentUserRole) showDashboard();
 };
