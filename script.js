@@ -22,18 +22,26 @@ let currentUserName = null;
 // Functions
 
 function login() {
-    const username = document.getElementById('username').value;
+    const username = document.getElementById('username').value.trim().toLowerCase();
     const password = document.getElementById('password').value;
+
     const user = users[username];
+
+    if (!username || !password) {
+        alert('Please enter both username and password.');
+        return;
+    }
 
     if (user && user.password === password) {
         currentUserRole = user.role;
         currentUserName = username;
+
         localStorage.setItem('userRole', currentUserRole);
         localStorage.setItem('userName', currentUserName);
+
         showDashboard();
     } else {
-        alert('Invalid credentials');
+        alert('Invalid credentials. Please try again.');
     }
 }
 function logout() {
