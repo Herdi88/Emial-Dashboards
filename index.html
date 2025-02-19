@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
  <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clinic Dashboard</title>
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Clinic Dashboard</title>
  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -15,15 +15,14 @@
     </div>
 
     <div id="dashboard" style="display: none;">
-    <nav>
-    <button id="callCenterNav" onclick="showPanel('callCenterPanel')" class="active">Call Center</button>
-    <button id="clinicStaffNav" onclick="showPanel('clinicStaffPanel')">Clinic Staff</button>
-    <button id="teamLeaderNav" onclick="showPanel('teamLeaderPanel')">Team Leader</button>
-    <button id="performanceNav" onclick="showPanel('performancePanel')">Performance</button>
-    <button onclick="logout()" style="background-color: red; color: white; margin-left: auto;">Logout</button>
-</nav>
+        <nav>
+            <button id="callCenterNav" onclick="showPanel('callCenterPanel')" class="active">Call Center</button>
+            <button id="clinicStaffNav" onclick="showPanel('clinicStaffPanel')">Clinic Staff</button>
+            <button id="teamLeaderNav" onclick="showPanel('teamLeaderPanel')">Team Leader</button>
+            <button id="performanceNav" onclick="showPanel('performancePanel')">Performance</button>
+            <button onclick="logout()" style="background-color: red; color: white; margin-left: auto;">Logout</button>
+        </nav>
 
-       
         <div id="callCenterPanel" class="panel active">
             <h2>Call Center</h2>
             <input type="text" id="callerName" placeholder="Caller Name">
@@ -68,14 +67,14 @@
             <div id="performanceMetrics"></div>
         </div>
 
-<div id="notificationArea">
-    <h2>Notifications</h2>
-    <button onclick="clearNotifications()">Clear Notifications</button>
-    <div id="notificationsContainer"></div>
-</div>
-
+        <div id="notificationArea">
+            <h2>Notifications</h2>
+            <button onclick="clearNotifications()">Clear Notifications</button>
+            <div id="notificationsContainer"></div>
+        </div>
     </div>
 
     <script src="script.js"></script>
 </body>
 </html>
+
