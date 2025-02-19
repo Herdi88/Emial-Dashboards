@@ -19,10 +19,11 @@ const users = {
 // Data Storage (in a real app, this would be a database)
 let messages = [];
 
-// Current user role
-let currentUserRole = null;
-let currentUserName = null;
-let staffmessages = []
+currentUserRole = user.role;
+currentUserName = username;
+localStorage.setItem('userRole', currentUserRole);
+localStorage.setItem('userName', currentUserName);
+showDashboard();
 
 // Functions
 
@@ -272,3 +273,13 @@ function addNotification(message) {
     notificationDiv.textContent = message;
     notificationArea.appendChild(notificationDiv);
 }
+// Check LocalStorage for saved login role
+window.onload = function () {
+    const savedRole = localStorage.getItem('userRole');
+    const savedUserName = localStorage.getItem('userName');
+    if (savedRole && savedUserName) {
+        currentUserRole = savedRole;
+        currentUserName = savedUserName;
+        showDashboard();
+    }
+};
