@@ -12,18 +12,14 @@ const users = {
     "hardi": { password: "hardiPass123", role: "teamLeader", floor: "3rd Floor", doctor: "Dr. Smith", clinicStaff: "Alice" },
     "alice": { password: "alicePass123", role: "clinicStaff", floor: "2nd Floor", doctor: "Dr. Jones", clinicStaff: "Bob" },
     "bob": { password: "bobPass123", role: "clinicStaff", floor: "1st Floor", doctor: "Dr. Brown", clinicStaff: "Charlie" },
-    "charlie": { password: "charliePass123", role: "callCenter", floor: "1st Floor", doctor: "Dr. Brown", clinicStaff: "Charlie" },
+    "charlie": { password: "charliePass123", role: "callCenter", floor: "1st Floor", doctor: null, clinicStaff: null },
     "admin": { password: "adminPass123", role: "admin", floor: "N/A", doctor: "N/A", clinicStaff: "N/A" },
 };
 
 // Data Storage (in a real app, this would be a database)
 let messages = [];
-
-currentUserRole = user.role;
-currentUserName = username;
-localStorage.setItem('userRole', currentUserRole);
-localStorage.setItem('userName', currentUserName);
-showDashboard();
+let currentUserRole = null;
+let currentUserName = null;
 
 // Functions
 
@@ -41,11 +37,14 @@ function login() {
 
     if (user && user.password === password) {
         currentUserRole = user.role;
+        localStorage.setItem('userRole', currentUserRole);
+        localStorage.setItem('userName', currentUserName);
         showDashboard();
     } else {
         displayLoginError('Invalid credentials. Please try again.');
     }
 }
+
 function logout() {
     localStorage.removeItem('userRole');
     localStorage.removeItem('userName');
@@ -59,15 +58,14 @@ function showDashboard() {
     document.getElementById(LOGIN_PANEL_ID).style.display = 'none';
     document.getElementById(DASHBOARD_ID).style.display = 'block';
 
-    // Show/hide panels based on role
     const callCenterPanel = document.getElementById('callCenterPanel');
     const clinicStaffPanel = document.getElementById('clinicStaffPanel');
     const teamLeaderPanel = document.getElementById('teamLeaderPanel');
     const performancePanel = document.getElementById('performancePanel');
-    const callCenterNav = document.getElementById('callCenterNav')
-    const clinicStaffNav = document.getElementById('clinicStaffNav')
-    const teamLeaderNav = document.getElementById('teamLeaderNav')
-    const performanceNav = document.getElementById('performanceNav')
+    const callCenterNav = document.getElementById('callCenterNav');
+    const clinicStaffNav = document.getElementById('clinicStaffNav');
+    const teamLeaderNav = document.getElementById('teamLeaderNav');
+    const performanceNav = document.getElementById('performanceNav');
 
     callCenterPanel.classList.remove('active');
     clinicStaffPanel.classList.remove('active');
@@ -78,32 +76,39 @@ function showDashboard() {
     teamLeaderNav.classList.remove('active');
     performanceNav.classList.remove('active');
 
-
     if (currentUserRole === 'callCenter') {
         callCenterPanel.classList.add('active');
-        callCenterNav.classList.add('active')
+        callCenterNav.classList.add('active');
     } else if (currentUserRole === 'clinicStaff') {
         clinicStaffPanel.classList.add('active');
-        clinicStaffNav.classList.add('active')
+        clinicStaffNav.classList.add('active');
     } else if (currentUserRole === 'teamLeader' || currentUserRole === 'admin') {
         teamLeaderPanel.classList.add('active');
-        teamLeaderNav.classList.add('active')
-    } else if (currentUserRole === 'admin') {
-        performancePanel.classList.add('active');
-        performanceNav.classList.add('active')
+        teamLeaderNav.classList.add('active');
     }
     displayMessages();
 }
+
 function displayLoginError(message) {
     alert(message);
 }
+
 function showPanel(panelId) {
-    // Hide all panels
     const panels = document.querySelectorAll('.panel');
     panels.forEach(panel => panel.classList.remove('active'));
-    // Show selected panel
     document.getElementById(panelId).classList.add('active');
 }
+
+window.onload = function () {
+    const savedRole = localStorage.getItem('userRole');
+    const savedUserName = localStorage.getItem('userName');
+    if (savedRole && savedUserName) {
+        currentUserRole = savedRole;
+        currentUserName = savedUserName;
+        showDashboard();
+    }
+};
+
 
 function sendCallCenterMessage() {
     const callerName = document.getElementById('callerName').value;
