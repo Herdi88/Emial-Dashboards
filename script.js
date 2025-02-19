@@ -69,7 +69,6 @@ function sendCallCenterMessage() {
     displayMessages();
 }
 
-function displayMessages() {
     function displayMessages() {
     const callCenterMessages = document.getElementById(CALL_CENTER_MESSAGES_ID);
     const clinicStaffMessages = document.getElementById(CLINIC_STAFF_MESSAGES_ID);
