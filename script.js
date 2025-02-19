@@ -5,49 +5,39 @@ const CALL_CENTER_MESSAGES_ID = 'callCenterMessages';
 const CLINIC_STAFF_MESSAGES_ID = 'clinicStaffMessages';
 const TEAM_LEADER_MESSAGES_ID = 'teamLeaderMessages';
 const PERFORMANCE_METRICS_ID = 'performanceMetrics';
-const NOTIFICATION_AREA_ID = 'notificationArea';
+const NOTIFICATION_AREA_ID = 'notificationsContainer';
 
 // User Data (expanded for roles)
 const users = {
-    "hardi": { password: "hardiPass123", role: "teamLeader", floor: "3rd Floor", doctor: "Dr. Smith", clinicStaff: "Alice" },
-    "alice": { password: "alicePass123", role: "clinicStaff", floor: "2nd Floor", doctor: "Dr. Jones", clinicStaff: "Bob" },
-    "bob": { password: "bobPass123", role: "clinicStaff", floor: "1st Floor", doctor: "Dr. Brown", clinicStaff: "Charlie" },
-    "charlie": { password: "charliePass123", role: "callCenter", floor: "1st Floor", doctor: null, clinicStaff: null },
-    "admin": { password: "adminPass123", role: "admin", floor: "N/A", doctor: "N/A", clinicStaff: "N/A" },
+    "hardi": { password: "hardiPass123", role: "teamLeader", doctor: "Dr. Smith" },
+    "alice": { password: "alicePass123", role: "clinicStaff", doctor: "Dr. Jones" },
+    "bob": { password: "bobPass123", role: "clinicStaff", doctor: "Dr. Brown" },
+    "charlie": { password: "charliePass123", role: "callCenter" },
+    "admin": { password: "adminPass123", role: "admin" }
 };
 
-// Data Storage (in a real app, this would be a database)
 let messages = [];
 let currentUserRole = null;
 let currentUserName = null;
-
 // Functions
 
 function login() {
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
-    currentUserName = username.toLowerCase();
-
-    const user = users[currentUserName];
-
-    if (!username || !password) {
-        displayLoginError('Please enter both username and password.');
-        return;
-    }
+    const user = users[username];
 
     if (user && user.password === password) {
         currentUserRole = user.role;
+        currentUserName = username;
         localStorage.setItem('userRole', currentUserRole);
         localStorage.setItem('userName', currentUserName);
         showDashboard();
     } else {
-        displayLoginError('Invalid credentials. Please try again.');
+        alert('Invalid credentials');
     }
 }
-
 function logout() {
-    localStorage.removeItem('userRole');
-    localStorage.removeItem('userName');
+    localStorage.clear();
     currentUserRole = null;
     currentUserName = null;
     document.getElementById(LOGIN_PANEL_ID).style.display = 'block';
@@ -57,92 +47,49 @@ function logout() {
 function showDashboard() {
     document.getElementById(LOGIN_PANEL_ID).style.display = 'none';
     document.getElementById(DASHBOARD_ID).style.display = 'block';
-
-    const callCenterPanel = document.getElementById('callCenterPanel');
-    const clinicStaffPanel = document.getElementById('clinicStaffPanel');
-    const teamLeaderPanel = document.getElementById('teamLeaderPanel');
-    const performancePanel = document.getElementById('performancePanel');
-    const callCenterNav = document.getElementById('callCenterNav');
-    const clinicStaffNav = document.getElementById('clinicStaffNav');
-    const teamLeaderNav = document.getElementById('teamLeaderNav');
-    const performanceNav = document.getElementById('performanceNav');
-
-    callCenterPanel.classList.remove('active');
-    clinicStaffPanel.classList.remove('active');
-    teamLeaderPanel.classList.remove('active');
-    performancePanel.classList.remove('active');
-    callCenterNav.classList.remove('active');
-    clinicStaffNav.classList.remove('active');
-    teamLeaderNav.classList.remove('active');
-    performanceNav.classList.remove('active');
-
-    if (currentUserRole === 'callCenter') {
-        callCenterPanel.classList.add('active');
-        callCenterNav.classList.add('active');
-    } else if (currentUserRole === 'clinicStaff') {
-        clinicStaffPanel.classList.add('active');
-        clinicStaffNav.classList.add('active');
-    } else if (currentUserRole === 'teamLeader' || currentUserRole === 'admin') {
-        teamLeaderPanel.classList.add('active');
-        teamLeaderNav.classList.add('active');
-    }
     displayMessages();
 }
-
-function displayLoginError(message) {
-    alert(message);
-}
-
-function showPanel(panelId) {
-    const panels = document.querySelectorAll('.panel');
-    panels.forEach(panel => panel.classList.remove('active'));
+   function showPanel(panelId) {
+    document.querySelectorAll('.panel').forEach(panel => panel.classList.remove('active'));
     document.getElementById(panelId).classList.add('active');
 }
 
+function sendCallCenterMessage() {
+    const message = {
+        id: Date.now(),
+        callerName: document.getElementById('callerName').value,
+        contactInfo: document.getElementById('contactInfo').value,
+        mrn: document.getElementById('mrn').value,
+        inquiryReason: document.getElementById('inquiryReason').value,
+        selectedDoctor: document.getElementById('doctorSelect').value,
+        replies: []
+    };
+
+    messages.push(message);
+    displayMessages();
+}
+
 function displayMessages() {
-    const callCenterMessages = document.getElementById(CALL_CENTER_MESSAGES_ID);
-    const clinicStaffMessages = document.getElementById(CLINIC_STAFF_MESSAGES_ID);
-    const teamLeaderMessages = document.getElementById(TEAM_LEADER_MESSAGES_ID);
-
-    callCenterMessages.innerHTML = '';
-    clinicStaffMessages.innerHTML = '';
-    teamLeaderMessages.innerHTML = '';
-
-    messages.forEach(message => {
-        const messageElement = createMessageElement(message);
-
-        if (currentUserRole === 'callCenter' || currentUserRole === 'admin') {
-            callCenterMessages.appendChild(messageElement);
-        }
-
-        if (currentUserRole === 'clinicStaff' || currentUserRole === 'admin') {
-            if (message.selectedDoctor === users[currentUserName].doctor) {
-                clinicStaffMessages.appendChild(messageElement);
-            }
-        }
-
-        if (currentUserRole === 'teamLeader' || currentUserRole === 'admin') {
-            teamLeaderMessages.appendChild(messageElement);
-        }
-    });
-
-    // THIS IS THE IMPORTANT LINE!
     updatePerformanceMetrics();
+}
 
 function updatePerformanceMetrics() {
-    const totalMessages = messages.length;
-    const urgentMessages = messages.filter(msg => msg.isUrgent).length;
-    const delayedMessages = messages.filter(msg => msg.isDelayed).length;
-    const completedCalls = messages.filter(msg => msg.replies.includes('Call completed')).length;
-
-    const performanceMetricsDiv = document.getElementById(PERFORMANCE_METRICS_ID);
-    performanceMetricsDiv.innerHTML = `
-        <p><strong>Total Messages:</strong> ${totalMessages}</p>
-        <p><strong>Urgent Messages:</strong> ${urgentMessages}</p>
-        <p><strong>Delayed Messages:</strong> ${delayedMessages}</p>
-        <p><strong>Completed Calls:</strong> ${completedCalls}</p>
+    document.getElementById(PERFORMANCE_METRICS_ID).innerHTML = `
+        <p>Total Messages: ${messages.length}</p>
     `;
 }
+
+function clearNotifications() {
+    document.getElementById(NOTIFICATION_AREA_ID).innerHTML = '';
+}
+
+window.onload = function() {
+    const savedRole = localStorage.getItem('userRole');
+    if (savedRole) {
+        currentUserRole = savedRole;
+        showDashboard();
+    }
+};
 
 
 
