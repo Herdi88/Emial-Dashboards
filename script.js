@@ -210,6 +210,15 @@ function createMessageElement(message) {
     messageDiv.classList.add('message');
     messageDiv.id = `message-${message.id}`;
 
+    const now = new Date();
+    const oneHour = 60 * 60 * 1000; // 1 hour in milliseconds
+
+    // Automatic Urgent flag if no reply after 1 hour
+    if (!message.repliedAt && (now - new Date(message.timestamp)) > oneHour) {
+        message.isUrgent = true;
+    }
+
+    // Apply styles based on message state
     if (message.isUrgent) {
         messageDiv.classList.add('urgent');
     }
@@ -217,6 +226,7 @@ function createMessageElement(message) {
         messageDiv.classList.add('delayed');
     }
 
+    // Basic message details
     messageDiv.innerHTML = `
         <p><strong>Caller:</strong> ${message.callerName}</p>
         <p><strong>Contact:</strong> ${message.contactInfo}</p>
@@ -224,9 +234,17 @@ function createMessageElement(message) {
         <p><strong>Inquiry:</strong> ${message.inquiryReason}</p>
         <p><strong>Doctor:</strong> ${message.selectedDoctor}</p>
         <p><strong>Sent by:</strong> ${message.sender}</p>
+        <p><strong>Sent at:</strong> ${new Date(message.timestamp).toLocaleTimeString()}</p>
     `;
 
-    // Display replies
+    // Show reply status
+    if (message.repliedAt) {
+        messageDiv.innerHTML += `<p><strong>Replied At:</strong> ${new Date(message.repliedAt).toLocaleTimeString()}</p>`;
+    } else {
+        messageDiv.innerHTML += `<p style="color: red;"><strong>Pending Reply</strong></p>`;
+    }
+
+    // Display replies (if any)
     if (message.replies.length > 0) {
         const repliesDiv = document.createElement('div');
         repliesDiv.classList.add('replies');
@@ -238,49 +256,51 @@ function createMessageElement(message) {
         messageDiv.appendChild(repliesDiv);
     }
 
-    // Clinic Staff Reply
-    if (currentUserRole === 'clinicStaff' && message.replies.length === 0 && message.selectedDoctor === users[currentUserName].doctor ) {
+    // Clinic Staff Reply buttons
+    if (currentUserRole === 'clinicStaff' && message.replies.length === 0 && message.selectedDoctor === users[currentUserName].doctor) {
         const replyButton = document.createElement('button');
         replyButton.textContent = 'Call completed';
         replyButton.onclick = () => replyToMessage(message.id, 'Call completed');
         messageDiv.appendChild(replyButton);
 
         const replyButton2 = document.createElement('button');
-        replyButton2.textContent = 'unreachable';
-        replyButton2.onclick = () => replyToMessage(message.id, 'unreachable');
+        replyButton2.textContent = 'Unreachable';
+        replyButton2.onclick = () => replyToMessage(message.id, 'Unreachable');
         messageDiv.appendChild(replyButton2);
 
         const replyButton3 = document.createElement('button');
-        replyButton3.textContent = 'appointment booked';
-        replyButton3.onclick = () => replyToMessage(message.id, 'appointment booked');
+        replyButton3.textContent = 'Appointment booked';
+        replyButton3.onclick = () => replyToMessage(message.id, 'Appointment booked');
         messageDiv.appendChild(replyButton3);
     }
-        // Add flag buttons for team leaders
-        if (currentUserRole === 'teamLeader' || currentUserRole === 'admin') {
-            if (!message.isUrgent) {
+
+    // Team Leader/ Admin - Urgent and Delayed Flags
+    if (currentUserRole === 'teamLeader' || currentUserRole === 'admin') {
+        if (!message.isUrgent) {
             const urgentButton = document.createElement('button');
             urgentButton.textContent = 'Flag Urgent';
             urgentButton.onclick = () => flagMessage(message.id);
             messageDiv.appendChild(urgentButton);
-            }
-            if (!message.isDelayed) {
-                const delayButton = document.createElement('button');
-                delayButton.textContent = 'Mark Delayed';
-                delayButton.onclick = () => markDelay(message.id);
-                messageDiv.appendChild(delayButton);
-            }
         }
+        if (!message.isDelayed) {
+            const delayButton = document.createElement('button');
+            delayButton.textContent = 'Mark Delayed';
+            delayButton.onclick = () => markDelay(message.id);
+            messageDiv.appendChild(delayButton);
+        }
+    }
 
     return messageDiv;
+}
+
 }
 
 function replyToMessage(messageId, reply) {
     const message = messages.find(msg => msg.id === messageId);
     if (message) {
         message.replies.push(reply);
-        const messageElement = document.getElementById(`message-${messageId}`);
-        messageElement.classList.add("replied")
-        displayMessages()
+        message.repliedAt = new Date();
+        displayMessages();
         addNotification(`Message for ${message.selectedDoctor} has been replied with: ${reply}`);
     }
 }
