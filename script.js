@@ -314,8 +314,6 @@ function createMessageElement(message) {
     return messageDiv;
 }
 
-}
-
 function replyToMessage(messageId, reply) {
     const message = messages.find(msg => msg.id === messageId);
     if (message) {
