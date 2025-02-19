@@ -101,6 +101,10 @@ nav button:hover {
     background-color: #0056b3;
     color: white;
 }
+nav {
+    display: flex;
+    gap: 8px;
+}
 
 #notificationArea {
     background-color: #f9f9f9;
