@@ -128,16 +128,7 @@ function displayMessages() {
 
     // THIS IS THE IMPORTANT LINE!
     updatePerformanceMetrics();
-}
 
-
-    updatePerformanceMetrics();
-    <div id="performancePanel" class="panel">
-    <h2>Performance Tracking</h2>
-    <div id="performanceMetrics"></div>
-</div>
-
-}
 function updatePerformanceMetrics() {
     const totalMessages = messages.length;
     const urgentMessages = messages.filter(msg => msg.isUrgent).length;
