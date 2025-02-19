@@ -7,19 +7,14 @@ const TEAM_LEADER_MESSAGES_ID = 'teamLeaderMessages';
 const PERFORMANCE_METRICS_ID = 'performanceMetrics';
 const NOTIFICATION_AREA_ID = 'notificationsContainer';
 
-// User Data (expanded for roles)
+// Users & Mapping Doctor to Clinic Staff
 const users = {
     "hardi": { password: "hardiPass123", role: "teamLeader" },
-    "alice": { password: "alicePass123", role: "clinicStaff", assignedClinic: "alice" },
-    "bob": { password: "bobPass123", role: "clinicStaff", assignedClinic: "bob" },
-    "charlie": { password: "charliePass123", role: "callCenter" },
+    "alice": { password: "alicePass123", role: "clinicStaff", assignedDoctor: "Dr. Smith" },
+    "bob": { password: "bobPass123", role: "clinicStaff", assignedDoctor: "Dr. Jones" },
+    "charlie": { password: "charliePass123", role: "clinicStaff", assignedDoctor: "Dr. Brown" },
+    "call1": { password: "callPass123", role: "callCenter" },
     "admin": { password: "adminPass123", role: "admin" }
-};
-
-const doctorToClinicStaff = {
-    "Dr. Smith": "alice",
-    "Dr. Jones": "bob",
-    "Dr. Brown": "bob"
 };
 
 let messages = [];
@@ -31,6 +26,7 @@ let currentUserName = null;
 function login() {
     const username = document.getElementById('username').value.trim().toLowerCase();
     const password = document.getElementById('password').value;
+
     const user = users[username];
 
     if (user && user.password === password) {
@@ -77,8 +73,6 @@ function sendCallCenterMessage() {
         return;
     }
 
-    const assignedClinicStaff = doctorToClinicStaff[selectedDoctor];
-
     const newMessage = {
         id: Date.now(),
         callerName,
@@ -86,13 +80,11 @@ function sendCallCenterMessage() {
         mrn,
         inquiryReason,
         selectedDoctor,
-        clinicStaff: assignedClinicStaff,
-        timestamp: new Date(),
-        replies: [],
-        repliedAt: null,
         sender: currentUserName,
-        isUrgent: false,
-        isDelayed: false
+        replies: [],
+        timestamp: new Date(),
+        repliedAt: null,
+        isUrgent: false
     };
 
     messages.push(newMessage);
@@ -113,8 +105,7 @@ function displayMessages() {
     messages.forEach(message => {
         const messageElement = createMessageElement(message);
 
-        // Auto flag as urgent if more than 1 hour without reply
-        if (!message.repliedAt && now - new Date(message.timestamp) > 3600000) {
+        if (!message.repliedAt && (now - new Date(message.timestamp)) > 3600000) {
             message.isUrgent = true;
         }
 
@@ -122,7 +113,7 @@ function displayMessages() {
             callCenterMessages.appendChild(messageElement);
         }
 
-        if (currentUserRole === 'clinicStaff' && message.clinicStaff === currentUserName) {
+        if (currentUserRole === 'clinicStaff' && users[currentUserName].assignedDoctor === message.selectedDoctor) {
             clinicStaffMessages.appendChild(messageElement);
         }
 
@@ -139,21 +130,18 @@ function createMessageElement(message) {
     messageDiv.classList.add('message');
 
     if (message.isUrgent) messageDiv.classList.add('urgent');
-    if (message.isDelayed) messageDiv.classList.add('delayed');
 
     messageDiv.innerHTML = `
         <p><strong>Caller:</strong> ${message.callerName}</p>
         <p><strong>Doctor:</strong> ${message.selectedDoctor}</p>
-        <p><strong>Sent by (Call Center):</strong> ${message.sender}</p>
-        <p><strong>Assigned Clinic Staff:</strong> ${message.clinicStaff}</p>
-        <p><strong>Time Sent:</strong> ${new Date(message.timestamp).toLocaleString()}</p>
+        <p><strong>Sender (Call Center):</strong> ${message.sender}</p>
     `;
 
     if (message.repliedAt) {
-        messageDiv.innerHTML += `<p><strong>Replied At:</strong> ${new Date(message.repliedAt).toLocaleString()}</p>`;
+        messageDiv.innerHTML += `<p><strong>Replied At:</strong> ${new Date(message.repliedAt).toLocaleTimeString()}</p>`;
     }
 
-    if (currentUserRole === 'clinicStaff' && message.clinicStaff === currentUserName && message.replies.length === 0) {
+    if (currentUserRole === 'clinicStaff' && message.replies.length === 0) {
         ['Call completed', 'Unreachable', 'Appointment booked'].forEach(replyText => {
             const button = document.createElement('button');
             button.textContent = replyText;
@@ -186,3 +174,4 @@ window.onload = function () {
     currentUserName = localStorage.getItem('userName');
     if (currentUserRole) showDashboard();
 };
+
