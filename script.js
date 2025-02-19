@@ -108,8 +108,15 @@ function displayMessages() {
     clinicStaffMessages.innerHTML = '';
     teamLeaderMessages.innerHTML = '';
 
+    const now = new Date();
+
     messages.forEach(message => {
         const messageElement = createMessageElement(message);
+
+        // Auto flag as urgent if more than 1 hour without reply
+        if (!message.repliedAt && now - new Date(message.timestamp) > 3600000) {
+            message.isUrgent = true;
+        }
 
         if (currentUserRole === 'callCenter' || currentUserRole === 'admin') {
             callCenterMessages.appendChild(messageElement);
@@ -131,12 +138,15 @@ function createMessageElement(message) {
     const messageDiv = document.createElement('div');
     messageDiv.classList.add('message');
 
+    if (message.isUrgent) messageDiv.classList.add('urgent');
+    if (message.isDelayed) messageDiv.classList.add('delayed');
+
     messageDiv.innerHTML = `
         <p><strong>Caller:</strong> ${message.callerName}</p>
         <p><strong>Doctor:</strong> ${message.selectedDoctor}</p>
-        <p><strong>Sender (Call Center):</strong> ${message.sender}</p>
+        <p><strong>Sent by (Call Center):</strong> ${message.sender}</p>
         <p><strong>Assigned Clinic Staff:</strong> ${message.clinicStaff}</p>
-        <p><strong>Timestamp:</strong> ${new Date(message.timestamp).toLocaleString()}</p>
+        <p><strong>Time Sent:</strong> ${new Date(message.timestamp).toLocaleString()}</p>
     `;
 
     if (message.repliedAt) {
@@ -166,10 +176,9 @@ function replyToMessage(id, reply) {
 
 function updatePerformanceMetrics() {
     const metricsDiv = document.getElementById(PERFORMANCE_METRICS_ID);
-    const responseTimes = messages.filter(m => m.repliedAt).map(m => (new Date(m.repliedAt) - new Date(m.timestamp)) / 60000);
-    const avgResponseTime = responseTimes.length ? (responseTimes.reduce((a, b) => a + b) / responseTimes.length).toFixed(2) : 'N/A';
-
-    metricsDiv.innerHTML = `<p>Average Response Time: ${avgResponseTime} minutes</p>`;
+    const times = messages.filter(m => m.repliedAt).map(m => (new Date(m.repliedAt) - new Date(m.timestamp)) / 60000);
+    const avgTime = times.length ? (times.reduce((a, b) => a + b) / times.length).toFixed(2) : 'N/A';
+    metricsDiv.innerHTML = `<p>Average Reply Time: ${avgTime} min</p>`;
 }
 
 window.onload = function () {
