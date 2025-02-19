@@ -123,6 +123,11 @@ function displayMessages() {
     });
 
     updatePerformanceMetrics();
+    <div id="performancePanel" class="panel">
+    <h2>Performance Tracking</h2>
+    <div id="performanceMetrics"></div>
+</div>
+
 }
 function updatePerformanceMetrics() {
     const totalMessages = messages.length;
