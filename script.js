@@ -119,32 +119,47 @@ function sendCallCenterMessage() {
     updatePerformanceMetrics();
 }
 function updatePerformanceMetrics() {
-    const totalMessages = messages.length;
-    const urgentMessages = messages.filter(msg => msg.isUrgent).length;
-    const delayedMessages = messages.filter(msg => msg.isDelayed).length;
-    const completedCalls = messages.filter(msg => msg.replies.includes('Call completed')).length;
-
     const performanceMetricsDiv = document.getElementById(PERFORMANCE_METRICS_ID);
-    performanceMetricsDiv.innerHTML = `
-        <p><strong>Total Messages:</strong> ${totalMessages}</p>
-        <p><strong>Urgent Messages:</strong> ${urgentMessages}</p>
-        <p><strong>Delayed Messages:</strong> ${delayedMessages}</p>
-        <p><strong>Completed Calls:</strong> ${completedCalls}</p>
-    `;
+
+    const staffResponseTimes = {};
+
+    messages.forEach(msg => {
+        if (msg.repliedAt) {
+            const responseTime = (new Date(msg.repliedAt) - new Date(msg.timestamp)) / (60 * 1000);
+            if (!staffResponseTimes[msg.selectedDoctor]) {
+                staffResponseTimes[msg.selectedDoctor] = [];
+            }
+            staffResponseTimes[msg.selectedDoctor].push(responseTime);
+        }
+    });
+
+    let performanceSummary = '';
+    Object.keys(staffResponseTimes).forEach(doctor => {
+        const times = staffResponseTimes[doctor];
+        const averageTime = (times.reduce((a, b) => a + b, 0) / times.length).toFixed(2);
+        performanceSummary += `<p><strong>${doctor} - Avg Response Time:</strong> ${averageTime} min (${times.length} replies)</p>`;
+    });
+
+    if (performanceSummary === '') {
+        performanceSummary = '<p>No replies yet to calculate performance.</p>';
+    }
+
+    performanceMetricsDiv.innerHTML = performanceSummary;
 }
+
 function clearNotifications() {
     document.getElementById(NOTIFICATION_AREA_ID).innerHTML = '';
 }
 
-window.onload = function() {
+window.onload = function () {
     const savedRole = localStorage.getItem('userRole');
-    if (savedRole) {
+    const savedUserName = localStorage.getItem('userName');
+    if (savedRole && savedUserName) {
         currentUserRole = savedRole;
+        currentUserName = savedUserName;
         showDashboard();
     }
 };
-
-
 
 function sendCallCenterMessage() {
     const callerName = document.getElementById('callerName').value;
