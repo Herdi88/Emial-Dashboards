@@ -7,21 +7,17 @@ const TEAM_LEADER_MESSAGES_ID = 'teamLeaderMessages';
 const PERFORMANCE_METRICS_ID = 'performanceMetrics';
 const NOTIFICATION_AREA_ID = 'notificationsContainer';
 
-// Users & Mapping Doctor to Clinic Staff
 const users = {
     "hardi": { password: "hardiPass123", role: "teamLeader" },
-    "alice": { password: "alicePass123", role: "clinicStaff", assignedDoctor: "Dr. Smith" },
-    "bob": { password: "bobPass123", role: "clinicStaff", assignedDoctor: "Dr. Jones" },
-    "charlie": { password: "charliePass123", role: "clinicStaff", assignedDoctor: "Dr. Brown" },
-    "call1": { password: "callPass123", role: "callCenter" },
+    "alice": { password: "alicePass123", role: "clinicStaff", doctor: "Dr. Jones" },
+    "bob": { password: "bobPass123", role: "clinicStaff", doctor: "Dr. Brown" },
+    "charlie": { password: "charliePass123", role: "callCenter" },
     "admin": { password: "adminPass123", role: "admin" }
 };
 
 let messages = [];
 let currentUserRole = null;
 let currentUserName = null;
-
-// Functions
 
 function login() {
     const username = document.getElementById('username').value.trim().toLowerCase();
@@ -53,7 +49,25 @@ function logout() {
 function showDashboard() {
     document.getElementById(LOGIN_PANEL_ID).style.display = 'none';
     document.getElementById(DASHBOARD_ID).style.display = 'block';
+
+    document.getElementById('callCenterNav').style.display = (currentUserRole === 'callCenter' || currentUserRole === 'admin' || currentUserRole === 'teamLeader') ? 'inline-block' : 'none';
+    document.getElementById('clinicStaffNav').style.display = (currentUserRole === 'clinicStaff' || currentUserRole === 'admin' || currentUserRole === 'teamLeader') ? 'inline-block' : 'none';
+    document.getElementById('teamLeaderNav').style.display = (currentUserRole === 'teamLeader' || currentUserRole === 'admin') ? 'inline-block' : 'none';
+    document.getElementById('performanceNav').style.display = (currentUserRole === 'teamLeader' || currentUserRole === 'admin') ? 'inline-block' : 'none';
+
+    showPanelBasedOnRole();
     displayMessages();
+    updatePerformanceMetrics();
+}
+
+function showPanelBasedOnRole() {
+    if (currentUserRole === 'callCenter') {
+        showPanel('callCenterPanel');
+    } else if (currentUserRole === 'clinicStaff') {
+        showPanel('clinicStaffPanel');
+    } else if (currentUserRole === 'teamLeader' || currentUserRole === 'admin') {
+        showPanel('teamLeaderPanel');
+    }
 }
 
 function showPanel(panelId) {
@@ -62,116 +76,69 @@ function showPanel(panelId) {
 }
 
 function sendCallCenterMessage() {
-    const callerName = document.getElementById('callerName').value;
-    const contactInfo = document.getElementById('contactInfo').value;
-    const mrn = document.getElementById('mrn').value;
-    const inquiryReason = document.getElementById('inquiryReason').value;
-    const selectedDoctor = document.getElementById('doctorSelect').value;
-
-    if (!callerName || !contactInfo || !mrn || !inquiryReason || !selectedDoctor) {
-        alert("Please fill in all fields.");
-        return;
-    }
-
-    const newMessage = {
+    const message = {
         id: Date.now(),
-        callerName,
-        contactInfo,
-        mrn,
-        inquiryReason,
-        selectedDoctor,
+        callerName: document.getElementById('callerName').value,
+        contactInfo: document.getElementById('contactInfo').value,
+        mrn: document.getElementById('mrn').value,
+        inquiryReason: document.getElementById('inquiryReason').value,
+        selectedDoctor: document.getElementById('doctorSelect').value,
         sender: currentUserName,
-        replies: [],
         timestamp: new Date(),
+        replies: [],
         repliedAt: null,
-        isUrgent: false
+        repliedBy: null
     };
 
-    messages.push(newMessage);
+    messages.push(message);
     displayMessages();
+    addNotification(`New message for ${message.selectedDoctor} from ${message.callerName}`);
+}
+
+function replyToMessage(messageId, reply) {
+    const message = messages.find(msg => msg.id === messageId);
+    if (message) {
+        message.replies.push(reply);
+        message.repliedAt = new Date();
+        message.repliedBy = currentUserName;
+        displayMessages();
+        addNotification(`Reply to ${message.callerName}: ${reply}`);
+    }
 }
 
 function displayMessages() {
     const callCenterMessages = document.getElementById(CALL_CENTER_MESSAGES_ID);
     const clinicStaffMessages = document.getElementById(CLINIC_STAFF_MESSAGES_ID);
     const teamLeaderMessages = document.getElementById(TEAM_LEADER_MESSAGES_ID);
-
     callCenterMessages.innerHTML = '';
     clinicStaffMessages.innerHTML = '';
     teamLeaderMessages.innerHTML = '';
 
-    const now = new Date();
-
     messages.forEach(message => {
-        const messageElement = createMessageElement(message);
+        const messageDiv = document.createElement('div');
+        messageDiv.innerHTML = `<p><strong>Caller:</strong> ${message.callerName}</p>
+                                <p><strong>Doctor:</strong> ${message.selectedDoctor}</p>
+                                <p><strong>Sender (Call Center):</strong> ${message.sender}</p>`;
 
-        if (!message.repliedAt && (now - new Date(message.timestamp)) > 3600000) {
-            message.isUrgent = true;
+        if ((currentUserRole === 'clinicStaff' && users[currentUserName].doctor === message.selectedDoctor) || currentUserRole === 'admin' || currentUserRole === 'teamLeader') {
+            clinicStaffMessages.appendChild(messageDiv);
         }
 
-        if (currentUserRole === 'callCenter' || currentUserRole === 'admin') {
-            callCenterMessages.appendChild(messageElement);
-        }
-
-        if (currentUserRole === 'clinicStaff' && users[currentUserName].assignedDoctor === message.selectedDoctor) {
-            clinicStaffMessages.appendChild(messageElement);
-        }
-
-        if (currentUserRole === 'teamLeader' || currentUserRole === 'admin') {
-            teamLeaderMessages.appendChild(messageElement);
+        if (currentUserRole === 'callCenter' || currentUserRole === 'admin' || currentUserRole === 'teamLeader') {
+            teamLeaderMessages.appendChild(messageDiv);
         }
     });
-
-    updatePerformanceMetrics();
-}
-
-function createMessageElement(message) {
-    const messageDiv = document.createElement('div');
-    messageDiv.classList.add('message');
-
-    if (message.isUrgent) messageDiv.classList.add('urgent');
-
-    messageDiv.innerHTML = `
-        <p><strong>Caller:</strong> ${message.callerName}</p>
-        <p><strong>Doctor:</strong> ${message.selectedDoctor}</p>
-        <p><strong>Sender (Call Center):</strong> ${message.sender}</p>
-    `;
-
-    if (message.repliedAt) {
-        messageDiv.innerHTML += `<p><strong>Replied At:</strong> ${new Date(message.repliedAt).toLocaleTimeString()}</p>`;
-    }
-
-    if (currentUserRole === 'clinicStaff' && message.replies.length === 0) {
-        ['Call completed', 'Unreachable', 'Appointment booked'].forEach(replyText => {
-            const button = document.createElement('button');
-            button.textContent = replyText;
-            button.onclick = () => replyToMessage(message.id, replyText);
-            messageDiv.appendChild(button);
-        });
-    }
-
-    return messageDiv;
-}
-
-function replyToMessage(id, reply) {
-    const message = messages.find(msg => msg.id === id);
-    if (message) {
-        message.replies.push(reply);
-        message.repliedAt = new Date();
-        displayMessages();
-    }
 }
 
 function updatePerformanceMetrics() {
-    const metricsDiv = document.getElementById(PERFORMANCE_METRICS_ID);
-    const times = messages.filter(m => m.repliedAt).map(m => (new Date(m.repliedAt) - new Date(m.timestamp)) / 60000);
-    const avgTime = times.length ? (times.reduce((a, b) => a + b) / times.length).toFixed(2) : 'N/A';
-    metricsDiv.innerHTML = `<p>Average Reply Time: ${avgTime} min</p>`;
+    // Placeholder for detailed performance tracking
+    document.getElementById(PERFORMANCE_METRICS_ID).innerText = 'Performance tracker coming soon...';
 }
 
-window.onload = function () {
-    currentUserRole = localStorage.getItem('userRole');
-    currentUserName = localStorage.getItem('userName');
-    if (currentUserRole) showDashboard();
-};
+function addNotification(message) {
+    const notificationArea = document.getElementById(NOTIFICATION_AREA_ID);
+    const div = document.createElement('div');
+    div.textContent = message;
+    notificationArea.appendChild(div);
+}
 
