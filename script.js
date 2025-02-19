@@ -46,6 +46,14 @@ function login() {
         displayLoginError('Invalid credentials. Please try again.');
     }
 }
+function logout() {
+    localStorage.removeItem('userRole');
+    localStorage.removeItem('userName');
+    currentUserRole = null;
+    currentUserName = null;
+    document.getElementById(LOGIN_PANEL_ID).style.display = 'block';
+    document.getElementById(DASHBOARD_ID).style.display = 'none';
+}
 
 function showDashboard() {
     document.getElementById(LOGIN_PANEL_ID).style.display = 'none';
