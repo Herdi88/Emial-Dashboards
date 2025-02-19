@@ -1,81 +1,59 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
- <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clinic Dashboard</title>
- <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <div id="loginPanel">
-        <h2>Login</h2>
-        <input type="text" id="username" placeholder="Username">
-        <input type="password" id="password" placeholder="Password">
-        <button onclick="login()">Login</button>
-    </div>
-
-    <div id="dashboard" style="display: none;">
-    <nav>
-    <button id="callCenterNav" onclick="showPanel('callCenterPanel')" class="active">Call Center</button>
-    <button id="clinicStaffNav" onclick="showPanel('clinicStaffPanel')">Clinic Staff</button>
-    <button id="teamLeaderNav" onclick="showPanel('teamLeaderPanel')">Team Leader</button>
-    <button id="performanceNav" onclick="showPanel('performancePanel')">Performance</button>
-    <button onclick="logout()" style="background-color: red; color: white; margin-left: auto;">Logout</button>
-</nav>
-
-       
-        <div id="callCenterPanel" class="panel active">
-            <h2>Call Center</h2>
-            <input type="text" id="callerName" placeholder="Caller Name">
-            <input type="text" id="contactInfo" placeholder="Contact Info">
-            <input type="text" id="mrn" placeholder="MRN">
-            <select id="inquiryReason">
-                <option value="appointment">Appointment</option>
-                <option value="medication">Medication</option>
-                <option value="general">General Inquiry</option>
-            </select>
-            <select id="doctorSelect">
-                <option value="Dr. Smith">Dr. Smith</option>
-                <option value="Dr. Jones">Dr. Jones</option>
-                <option value="Dr. Brown">Dr. Brown</option>
-            </select>
-            <button onclick="sendCallCenterMessage()">Send Message</button>
-            <div id="callCenterMessages" class="messages"></div>
+    <html>
+    <head>
+      <title>My Web App</title>
+      <!-- ... other head elements ... -->
+    </head>
+    <body>
+      <div id="loginPanel">
+            <h2>Login</h2>
+            <input type="text" id="username" placeholder="Username">
+            <input type="password" id="password" placeholder="Password">
+            <button onclick="login()">Login</button>
         </div>
-
-        <div id="clinicStaffPanel" class="panel">
-            <h2>Clinic Staff</h2>
-            <div id="clinicStaffMessages" class="messages"></div>
+    
+        <div id="dashboard" style="display: none;">
+        <nav>
+        <button id="callCenterNav" onclick="showPanel('callCenterPanel')" class="active">Call Center</button>
+        <button id="clinicStaffNav" onclick="showPanel('clinicStaffPanel')">Clinic Staff</button>
+        <button id="teamLeaderNav" onclick="showPanel('teamLeaderPanel')">Team Leader</button>
+        <button id="performanceNav" onclick="showPanel('performancePanel')">Performance</button>
+        </nav>
+        <div id="callCenterPanel" style="display: block;"></div>
+        <div id="clinicStaffPanel" style="display: none;"></div>
+        <div id="teamLeaderPanel" style="display: none;"></div>
+        <div id="performancePanel" style="display: none;"></div>
         </div>
-
-        <div id="teamLeaderPanel" class="panel">
-            <h2>Team Leader</h2>
-            <div id="teamLeaderMessages" class="messages"></div>
-            <div class="filters">
-                <label for="filterDoctor">Filter by Doctor:</label>
-                <select id="filterDoctor">
-                    <option value="all">All</option>
-                    <option value="Dr. Smith">Dr. Smith</option>
-                    <option value="Dr. Jones">Dr. Jones</option>
-                    <option value="Dr. Brown">Dr. Brown</option>
-                </select>
-                <button onclick="filterMessages()">Filter</button>
-            </div>
-        </div>
-
-        <div id="performancePanel" class="panel">
-            <h2>Performance Tracking</h2>
-            <div id="performanceMetrics"></div>
-        </div>
-
-<div id="notificationArea">
-    <h2>Notifications</h2>
-    <button onclick="clearNotifications()">Clear Notifications</button>
-    <div id="notificationsContainer"></div>
-</div>
-
-    </div>
-
-    <script src="script.js"></script>
-</body>
-</html>
+    
+      <script> 
+          function login() {
+          const username = document.getElementById("username").value;
+          const password = document.getElementById("password").value;
+        
+          // Replace this with your actual login logic (e.g., API call)
+          if (username === "testuser" && password === "password123") {
+            alert("Login successful!");
+            document.getElementById("loginPanel").style.display = "none";
+            document.getElementById("dashboard").style.display = "block";
+          } else {
+            alert("Login failed. Check your credentials.");
+          }
+        }
+        
+        function showPanel(panelId){
+          const panels = document.querySelectorAll("#dashboard > div");
+          panels.forEach((panel) => panel.style.display = 'none');
+          const selectedPanel = document.getElementById(panelId);
+          if (selectedPanel) {
+            selectedPanel.style.display = 'block';
+          }
+          const buttons = document.querySelectorAll("#dashboard nav button");
+          buttons.forEach((button) => button.classList.remove("active"));
+          const selectedButton = document.querySelector("#dashboard nav button[onclick*=\"" + panelId + "\"]");
+            if (selectedButton){
+            selectedButton.classList.add("active");
+            }
+        }
+    </script>
+    </body>
+    </html>
