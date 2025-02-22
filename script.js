@@ -1,17 +1,23 @@
-// Firebase Configuration (Replace with your Firebase config)
+// Import the functions you need from the Firebase SDK
+import { initializeApp } from "firebase/app";
+import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { getFirestore, collection, addDoc, getDocs } from "firebase/firestore";
+
+// Your web app's Firebase configuration
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_AUTH_DOMAIN",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_STORAGE_BUCKET",
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-    appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyD2LhI9Jkqx2uVs_T8XVug2MuVV8OseN9w",
+  authDomain: "clinic-dashboard-v2.firebaseapp.com",
+  projectId: "clinic-dashboard-v2",
+  storageBucket: "clinic-dashboard-v2.firebasestorage.app",
+  messagingSenderId: "690684576272",
+  appId: "1:690684576272:web:08e4b807fd6be50cb8c095",
+  measurementId: "G-C4CV32VTNE"
 };
 
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
 // Constants
 const LOGIN_PANEL_ID = 'loginPanel';
@@ -26,47 +32,46 @@ let currentUserRole = null;
 let currentUserName = null;
 
 // Login Function
-function login() {
+async function login() {
     const email = document.getElementById('username').value.trim();
     const password = document.getElementById('password').value;
 
-    auth.signInWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-            const user = userCredential.user;
-            fetchUserRole(user.uid); // Fetch user role from Firestore
-        })
-        .catch((error) => {
-            alert('Login failed: ' + error.message);
-        });
+    try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+        await fetchUserRole(user.uid); // Fetch user role from Firestore
+    } catch (error) {
+        alert('Login failed: ' + error.message);
+    }
 }
 
 // Fetch User Role from Firestore
-function fetchUserRole(uid) {
-    db.collection('users').doc(uid).get()
-        .then((doc) => {
-            if (doc.exists) {
-                currentUserRole = doc.data().role;
-                currentUserName = doc.data().name;
-                showDashboard();
-            } else {
-                alert('User role not found.');
-            }
-        })
-        .catch((error) => {
-            alert('Error fetching user role: ' + error.message);
-        });
+async function fetchUserRole(uid) {
+    try {
+        const userDoc = await getDoc(doc(db, 'users', uid));
+        if (userDoc.exists()) {
+            currentUserRole = userDoc.data().role;
+            currentUserName = userDoc.data().name;
+            showDashboard();
+        } else {
+            alert('User role not found.');
+        }
+    } catch (error) {
+        alert('Error fetching user role: ' + error.message);
+    }
 }
 
 // Logout Function
-function logout() {
-    auth.signOut().then(() => {
+async function logout() {
+    try {
+        await signOut(auth);
         currentUserRole = null;
         currentUserName = null;
         document.getElementById(LOGIN_PANEL_ID).style.display = 'block';
         document.getElementById(DASHBOARD_ID).style.display = 'none';
-    }).catch((error) => {
+    } catch (error) {
         alert('Logout failed: ' + error.message);
-    });
+    }
 }
 
 // Show Dashboard
@@ -102,7 +107,7 @@ function showPanel(panelId) {
 }
 
 // Send Message from Call Center
-function sendCallCenterMessage() {
+async function sendCallCenterMessage() {
     const message = {
         callerName: document.getElementById('callerName').value,
         contactInfo: document.getElementById('contactInfo').value,
@@ -116,19 +121,18 @@ function sendCallCenterMessage() {
         repliedBy: null
     };
 
-    db.collection('messages').add(message)
-        .then(() => {
-            alert('Message sent successfully!');
-            displayMessages();
-            addNotification(`New message for ${message.selectedDoctor} from ${message.callerName}`);
-        })
-        .catch((error) => {
-            alert('Error sending message: ' + error.message);
-        });
+    try {
+        await addDoc(collection(db, 'messages'), message);
+        alert('Message sent successfully!');
+        displayMessages();
+        addNotification(`New message for ${message.selectedDoctor} from ${message.callerName}`);
+    } catch (error) {
+        alert('Error sending message: ' + error.message);
+    }
 }
 
 // Display Messages
-function displayMessages() {
+async function displayMessages() {
     const callCenterMessages = document.getElementById(CALL_CENTER_MESSAGES_ID);
     const clinicStaffMessages = document.getElementById(CLINIC_STAFF_MESSAGES_ID);
     const teamLeaderMessages = document.getElementById(TEAM_LEADER_MESSAGES_ID);
@@ -136,34 +140,33 @@ function displayMessages() {
     clinicStaffMessages.innerHTML = '';
     teamLeaderMessages.innerHTML = '';
 
-    db.collection('messages').get()
-        .then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-                const message = doc.data();
-                const messageDiv = document.createElement('div');
-                messageDiv.classList.add('message');
-                messageDiv.innerHTML = `
-                    <p><strong>Caller:</strong> ${message.callerName}</p>
-                    <p><strong>Contact Info:</strong> ${message.contactInfo}</p>
-                    <p><strong>MRN:</strong> ${message.mrn}</p>
-                    <p><strong>Reason:</strong> ${message.inquiryReason}</p>
-                    <p><strong>Doctor:</strong> ${message.selectedDoctor}</p>
-                    <p><strong>Sender:</strong> ${message.sender}</p>
-                    <p><strong>Timestamp:</strong> ${message.timestamp.toDate().toLocaleString()}</p>
-                `;
+    try {
+        const querySnapshot = await getDocs(collection(db, 'messages'));
+        querySnapshot.forEach((doc) => {
+            const message = doc.data();
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message');
+            messageDiv.innerHTML = `
+                <p><strong>Caller:</strong> ${message.callerName}</p>
+                <p><strong>Contact Info:</strong> ${message.contactInfo}</p>
+                <p><strong>MRN:</strong> ${message.mrn}</p>
+                <p><strong>Reason:</strong> ${message.inquiryReason}</p>
+                <p><strong>Doctor:</strong> ${message.selectedDoctor}</p>
+                <p><strong>Sender:</strong> ${message.sender}</p>
+                <p><strong>Timestamp:</strong> ${message.timestamp.toDate().toLocaleString()}</p>
+            `;
 
-                if ((currentUserRole === 'clinicStaff' && users[currentUserName].doctor === message.selectedDoctor) || currentUserRole === 'admin' || currentUserRole === 'teamLeader') {
-                    clinicStaffMessages.appendChild(messageDiv);
-                }
+            if ((currentUserRole === 'clinicStaff' && users[currentUserName].doctor === message.selectedDoctor) || currentUserRole === 'admin' || currentUserRole === 'teamLeader') {
+                clinicStaffMessages.appendChild(messageDiv);
+            }
 
-                if (currentUserRole === 'callCenter' || currentUserRole === 'admin' || currentUserRole === 'teamLeader') {
-                    teamLeaderMessages.appendChild(messageDiv);
-                }
-            });
-        })
-        .catch((error) => {
-            alert('Error fetching messages: ' + error.message);
+            if (currentUserRole === 'callCenter' || currentUserRole === 'admin' || currentUserRole === 'teamLeader') {
+                teamLeaderMessages.appendChild(messageDiv);
+            }
         });
+    } catch (error) {
+        alert('Error fetching messages: ' + error.message);
+    }
 }
 
 // Add Notification
