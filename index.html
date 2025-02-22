@@ -120,7 +120,7 @@
             const password = document.getElementById('password').value;
 
             try {
-                const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
+                const userCredential = await auth.signInWithEmailAndPassword(email, password);
                 const user = userCredential.user;
                 await fetchUserRole(user.uid); // Fetch user role from Firestore
             } catch (error) {
@@ -147,7 +147,7 @@
         // Logout Function
         async function logout() {
             try {
-                await firebase.auth().signOut();
+                await auth.signOut();
                 currentUserRole = null;
                 currentUserName = null;
                 document.getElementById(LOGIN_PANEL_ID).style.display = 'block';
