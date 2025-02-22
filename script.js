@@ -16,8 +16,8 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+const auth = getAuth(app); // Initialize auth
+const db = getFirestore(app); // Initialize Firestore
 
 // Constants
 const LOGIN_PANEL_ID = 'loginPanel';
