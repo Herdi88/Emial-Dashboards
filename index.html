@@ -1,4 +1,3 @@
-`html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -88,9 +87,11 @@
     <!-- Login Panel -->
     <div id="loginPanel">
         <h2>Login</h2>
-        <input type="text" id="username" placeholder="Email" required>
-        <input type="password" id="password" placeholder="Password" required>
-        <button id="loginButton">Login</button>
+        <form id="loginForm">
+            <input type="text" id="username" placeholder="Email" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <button type="submit" id="loginButton">Login</button>
+        </form>
     </div>
 
     <!-- Dashboard -->
@@ -98,11 +99,22 @@
         <h2>Clinic Dashboard</h2>
         <p id="userInfo"></p>
         <nav>
-            <button data-panel="callCenterPanel">Call Center</button>
-            <button data-panel="clinicStaffPanel">Clinic Staff</button>
-            <button data-panel="teamLeaderPanel">Team Leader</button>
+            <button data-panel="callCenterPanel" id="callCenterNav">Call Center</button>
+            <button data-panel="clinicStaffPanel" id="clinicStaffNav">Clinic Staff</button>
+            <button data-panel="teamLeaderPanel" id="teamLeaderNav">Team Leader</button>
             <button id="logoutButton">Logout</button>
         </nav>
+        
+        <!-- Call Center Panel -->
+        <div id="callCenterPanel" class="panel">
+            <h3>Call Center</h3>
+            <input type="text" id="callerName" placeholder="Caller Name" required>
+            <input type="text" id="contactInfo" placeholder="Contact Info" required>
+            <input type="text" id="mrn" placeholder="MRN" required>
+            <select id="inquiryReason" required>
+                <option value="">Select Reason</option>
+                <option value="appointment">Appointment</option>
+                <option value="
 
         <!-- Call Center Panel -->
         <div id="callCenterPanel" class="panel">
