@@ -4,6 +4,14 @@ import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { getFirestore, collection, addDoc, getDocs, doc, getDoc } from "firebase/firestore";
 
 // Your web app's Firebase configuration
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyD2LhI9Jkqx2uVs_T8XVug2MuVV8OseN9w",
   authDomain: "clinic-dashboard-v2.firebaseapp.com",
@@ -13,6 +21,10 @@ const firebaseConfig = {
   appId: "1:690684576272:web:08e4b807fd6be50cb8c095",
   measurementId: "G-C4CV32VTNE"
 };
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
