@@ -1,11 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clinic Dashboard</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        .panel {
+            display: none;
+        }
+
+        .panel.active {
+            display: block;
+        }
+    </style>
 </head>
+
 <body>
     <!-- Login Panel -->
     <div id="loginPanel">
@@ -20,10 +31,10 @@
         <h2>Clinic Dashboard</h2>
         <p id="userInfo"></p>
         <nav>
-            <button onclick="showPanel('callCenterPanel')">Call Center</button>
-            <button onclick="showPanel('clinicStaffPanel')">Clinic Staff</button>
-            <button onclick="showPanel('teamLeaderPanel')">Team Leader</button>
-            <button onclick="logout()">Logout</button>
+            <button data-panel="callCenterPanel">Call Center</button>
+            <button data-panel="clinicStaffPanel">Clinic Staff</button>
+            <button data-panel="teamLeaderPanel">Team Leader</button>
+            <button id="logoutButton">Logout</button>
         </nav>
 
         <!-- Call Center Panel -->
@@ -40,7 +51,7 @@
                 <option value="Dr. Smith">Dr. Smith</option>
                 <option value="Dr. Jones">Dr. Jones</option>
             </select>
-            <button onclick="sendMessage()">Send Message</button>
+            <button id="sendMessageButton">Send Message</button>
         </div>
 
         <!-- Clinic Staff Panel -->
@@ -48,12 +59,18 @@
             <h3>Clinic Staff</h3>
             <div id="clinicMessages"></div>
         </div>
+        
+         <!-- Team Leader Panel -->
+         <div id="teamLeaderPanel" class="panel">
+            <h3>Team Leader</h3>
+            <div id="teamLeaderMessages"></div>
+        </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, addDoc, collection } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyD2LhI9Jkqx2uVs_T8XVug2MuVV8OseN9w",
@@ -64,12 +81,13 @@
             appId: "1:690684576272:web:08e4b807fd6be50cb8c095",
             measurementId: "G-C4CV32VTNE"
         };
-        
+
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        
-        document.getElementById("loginButton").addEventListener("click", async function() {
+
+        // Function to handle login
+        document.getElementById("loginButton").addEventListener("click", async function () {
             const email = document.getElementById('username').value;
             const password = document.getElementById('password').value;
 
@@ -82,6 +100,7 @@
             }
         });
 
+        // Function to fetch user role and update UI
         async function fetchUserRole(uid) {
             try {
                 const userDoc = await getDoc(doc(db, 'users', uid));
@@ -90,6 +109,7 @@
                     document.getElementById("loginPanel").style.display = "none";
                     document.getElementById("dashboard").style.display = "block";
                     document.getElementById("userInfo").innerText = `Logged in as ${userData.name}, Role: ${userData.role}`;
+                    showPanelByRole(userData.role); // Show panel based on user role
                 } else {
                     alert('User role not found.');
                 }
@@ -98,7 +118,26 @@
             }
         }
 
-        window.logout = async function() {
+        // Function to show panel based on user role
+        function showPanelByRole(role) {
+            // Hide all panels first
+            document.querySelectorAll('.panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
+
+            // Show panel based on role
+            if (role === 'callCenter') {
+                showPanel('callCenterPanel');
+            } else if (role === 'clinicStaff') {
+                showPanel('clinicStaffPanel');
+            }else if (role === 'teamLeader') {
+                showPanel('teamLeaderPanel');
+            }
+            
+        }
+
+        // Function to handle logout
+        document.getElementById("logoutButton").addEventListener("click", async function () {
             try {
                 await signOut(auth);
                 document.getElementById("loginPanel").style.display = "block";
@@ -106,8 +145,60 @@
             } catch (error) {
                 alert('Logout failed: ' + error.message);
             }
+        });
+        // Function to show a panel
+        window.showPanel = function (panelId) {
+            document.querySelectorAll('.panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
+            document.getElementById(panelId).classList.add('active');
         }
+        // Function to handle sending messages
+        document.getElementById("sendMessageButton").addEventListener("click", async function() {
+        const callerName = document.getElementById('callerName').value;
+        const contactInfo = document.getElementById('contactInfo').value;
+        const mrn = document.getElementById('mrn').value;
+        const inquiryReason = document.getElementById('inquiryReason').value;
+        const doctorSelect = document.getElementById('doctorSelect').value;
+
+        // Validate input (you can add more validation)
+        if (!callerName || !contactInfo || !mrn || !inquiryReason || !doctorSelect) {
+            alert('Please fill in all fields.');
+            return;
+        }
+
+        // Create a message object
+        const message = {
+            callerName: callerName,
+            contactInfo: contactInfo,
+            mrn: mrn,
+            inquiryReason: inquiryReason,
+            doctorSelect: doctorSelect,
+            timestamp: new Date()
+        };
+
+        try {
+            // Add the message to Firestore
+            await addDoc(collection(db, 'messages'), message);
+            alert('Message sent successfully!');
+            // Clear form fields
+            document.getElementById('callerName').value = '';
+            document.getElementById('contactInfo').value = '';
+            document.getElementById('mrn').value = '';
+        } catch (error) {
+            console.error('Error sending message:', error);
+            alert('Error sending message.');
+        }
+    });
+    // Add event listeners to navigation buttons
+    document.querySelectorAll('nav button[data-panel]').forEach(button => {
+        button.addEventListener('click', function () {
+            const panelId = this.getAttribute('data-panel');
+            showPanel(panelId);
+        });
+    });
     </script>
 </body>
+
 </html>
 
