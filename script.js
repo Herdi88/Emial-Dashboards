@@ -46,17 +46,28 @@ async function login() {
 }
 
 // Fetch User Role from Firestore
+`javascript
 async function fetchUserRole(uid) {
+    console.log("fetchUserRole called with UID:", uid);
     try {
-        const userDoc = await getDoc(doc(db, 'users', uid));
+        const userDocRef = doc(db, 'users', uid); // Create a reference to the user document
+        console.log("userDocRef:", userDocRef); // Log the reference to the user document
+        const userDoc = await getDoc(userDocRef); // Use the reference to get the document
+        console.log("userDoc:", userDoc); // Log the user document snapshot
+
         if (userDoc.exists()) {
-            currentUserRole = userDoc.data().role;
-            currentUserName = userDoc.data().name;
-            showDashboard();
+            const userData = userDoc.data();
+            console.log("userData:", userData); // Log the user data
+            document.getElementById("loginPanel").style.display = "none";
+            document.getElementById("dashboard").style.display = "block";
+            document.getElementById("userInfo").innerText = `Logged in as ${userData.name}, Role: ${userData.role}`;
+            showPanelByRole(userData.role); // Show panel based on user role
         } else {
+            console.log("User document does not exist in Firestore.");
             alert('User role not found.');
         }
     } catch (error) {
+        console.error("Error fetching user role:", error);
         alert('Error fetching user role: ' + error.message);
     }
 }
