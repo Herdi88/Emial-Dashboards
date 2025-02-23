@@ -14,6 +14,70 @@
         .panel.active {
             display: block;
         }
+
+        #loginPanel{
+            width: 300px;
+            margin: 100px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        #loginPanel input{
+            width: 95%;
+            margin: 5px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        #loginPanel button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        #dashboard {
+            width: 80%;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        #dashboard nav{
+            margin-bottom: 20px;
+        }
+
+        #dashboard nav button {
+            padding: 10px;
+            margin-right: 10px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .panel input,
+        .panel select {
+            width: 95%;
+            margin: 5px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        .panel button{
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
     </style>
 </head>
 
@@ -21,8 +85,8 @@
     <!-- Login Panel -->
     <div id="loginPanel">
         <h2>Login</h2>
-        <input type="text" id="username" placeholder="Email">
-        <input type="password" id="password" placeholder="Password">
+        <input type="text" id="username" placeholder="Email" required>
+        <input type="password" id="password" placeholder="Password" required>
         <button id="loginButton">Login</button>
     </div>
 
@@ -40,14 +104,16 @@
         <!-- Call Center Panel -->
         <div id="callCenterPanel" class="panel">
             <h3>Call Center</h3>
-            <input type="text" id="callerName" placeholder="Caller Name">
-            <input type="text" id="contactInfo" placeholder="Contact Info">
-            <input type="text" id="mrn" placeholder="MRN">
-            <select id="inquiryReason">
+            <input type="text" id="callerName" placeholder="Caller Name" required>
+            <input type="text" id="contactInfo" placeholder="Contact Info" required>
+            <input type="text" id="mrn" placeholder="MRN" required>
+            <select id="inquiryReason" required>
+                <option value="">Select Reason</option>
                 <option value="appointment">Appointment</option>
                 <option value="medication">Medication</option>
             </select>
-            <select id="doctorSelect">
+            <select id="doctorSelect" required>
+                <option value="">Select Doctor</option>
                 <option value="Dr. Smith">Dr. Smith</option>
                 <option value="Dr. Jones">Dr. Jones</option>
             </select>
@@ -59,9 +125,9 @@
             <h3>Clinic Staff</h3>
             <div id="clinicMessages"></div>
         </div>
-        
-         <!-- Team Leader Panel -->
-         <div id="teamLeaderPanel" class="panel">
+
+        <!-- Team Leader Panel -->
+        <div id="teamLeaderPanel" class="panel">
             <h3>Team Leader</h3>
             <div id="teamLeaderMessages"></div>
         </div>
@@ -69,7 +135,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, signOut, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getFirestore, doc, getDoc, addDoc, collection } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -85,6 +151,12 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+
+        // Set the authentication persistence to local
+        setPersistence(auth, browserLocalPersistence)
+            .catch((error) => {
+                console.error("Error setting persistence:", error);
+            });
 
         // Function to handle login
         document.getElementById("loginButton").addEventListener("click", async function () {
@@ -130,10 +202,10 @@
                 showPanel('callCenterPanel');
             } else if (role === 'clinicStaff') {
                 showPanel('clinicStaffPanel');
-            }else if (role === 'teamLeader') {
+            } else if (role === 'teamLeader') {
                 showPanel('teamLeaderPanel');
             }
-            
+
         }
 
         // Function to handle logout
@@ -146,6 +218,7 @@
                 alert('Logout failed: ' + error.message);
             }
         });
+
         // Function to show a panel
         window.showPanel = function (panelId) {
             document.querySelectorAll('.panel').forEach(panel => {
@@ -153,52 +226,55 @@
             });
             document.getElementById(panelId).classList.add('active');
         }
+
         // Function to handle sending messages
-        document.getElementById("sendMessageButton").addEventListener("click", async function() {
-        const callerName = document.getElementById('callerName').value;
-        const contactInfo = document.getElementById('contactInfo').value;
-        const mrn = document.getElementById('mrn').value;
-        const inquiryReason = document.getElementById('inquiryReason').value;
-        const doctorSelect = document.getElementById('doctorSelect').value;
+        document.getElementById("sendMessageButton").addEventListener("click", async function () {
+            const callerName = document.getElementById('callerName').value;
+            const contactInfo = document.getElementById('contactInfo').value;
+            const mrn = document.getElementById('mrn').value;
+            const inquiryReason = document.getElementById('inquiryReason').value;
+            const doctorSelect = document.getElementById('doctorSelect').value;
 
-        // Validate input (you can add more validation)
-        if (!callerName || !contactInfo || !mrn || !inquiryReason || !doctorSelect) {
-            alert('Please fill in all fields.');
-            return;
-        }
+            // Validate input (you can add more validation)
+            if (!callerName || !contactInfo || !mrn || !inquiryReason || !doctorSelect) {
+                alert('Please fill in all fields.');
+                return;
+            }
 
-        // Create a message object
-        const message = {
-            callerName: callerName,
-            contactInfo: contactInfo,
-            mrn: mrn,
-            inquiryReason: inquiryReason,
-            doctorSelect: doctorSelect,
-            timestamp: new Date()
-        };
+            // Create a message object
+            const message = {
+                callerName: callerName,
+                contactInfo: contactInfo,
+                mrn: mrn,
+                inquiryReason: inquiryReason,
+                doctorSelect: doctorSelect,
+                timestamp: new Date()
+            };
 
-        try {
-            // Add the message to Firestore
-            await addDoc(collection(db, 'messages'), message);
-            alert('Message sent successfully!');
-            // Clear form fields
-            document.getElementById('callerName').value = '';
-            document.getElementById('contactInfo').value = '';
-            document.getElementById('mrn').value = '';
-        } catch (error) {
-            console.error('Error sending message:', error);
-            alert('Error sending message.');
-        }
-    });
-    // Add event listeners to navigation buttons
-    document.querySelectorAll('nav button[data-panel]').forEach(button => {
-        button.addEventListener('click', function () {
-            const panelId = this.getAttribute('data-panel');
-            showPanel(panelId);
+            try {
+                // Add the message to Firestore
+                await addDoc(collection(db, 'messages'), message);
+                alert('Message sent successfully!');
+                // Clear form fields
+                document.getElementById('callerName').value = '';
+                document.getElementById('contactInfo').value = '';
+                document.getElementById('mrn').value = '';
+                document.getElementById('inquiryReason').value = '';
+                document.getElementById('doctorSelect').value = '';
+            } catch (error) {
+                console.error('Error sending message:', error);
+                alert('Error sending message.');
+            }
         });
-    });
+
+        // Add event listeners to navigation buttons
+        document.querySelectorAll('nav button[data-panel]').forEach(button => {
+            button.addEventListener('click', function () {
+                const panelId = this.getAttribute('data-panel');
+                showPanel(panelId);
+            });
+        });
     </script>
 </body>
 
 </html>
-
